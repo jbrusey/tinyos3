@@ -106,7 +106,7 @@ class nescType( object ) :
 
   #   this func could be used for type checking
   def __setattr__(self, name, value) :
-    if self.__dict__.has_key("value") and name == "value":
+    if "value" in self.__dict__ and name == "value":
         #use the type conversions built into pack
         pack(self._conversionString, value)
     self.__dict__[name] = value
@@ -140,8 +140,8 @@ class nescType( object ) :
       return ''
     try:
       bytes = pack(self._conversionString, self.value)
-    except Exception, inst:
-      print inst
+    except Exception as inst:
+      print(inst)
       raise Exception("Bytes conversion error: %s %d bytes to %d" %
                       (self.nescType, len(bytes), self.size) )
     if len(bytes) != self.size:
@@ -158,8 +158,8 @@ class nescType( object ) :
                       (self.nescType, len(bytes), self.size))
     try:
       self.value, = unpack( self._conversionString, bytes[:self.size])
-    except Exception, inst:
-      print inst
+    except Exception as inst:
+      print(inst)
       raise Exception("Bytes conversion error: %s %d bytes to %d" %
                       ( self.nescType, len(bytes), self.size) )
     return bytes[self.size:]
@@ -343,7 +343,7 @@ class nescPointer( object ) :
     """initialize all elements to 0"""
     if len(varargs) == 0:
       return
-    elif len(varargs) == 2 and varargs[1].__dict__.has_key("tagName"):
+    elif len(varargs) == 2 and "tagName" in varargs[1].__dict__:
       (nescTypes, xmlDefinition) = varargs[:]
       if xmlDefinition.tagName != "type-pointer" :
         raise Exception("Not pointer definition")
@@ -430,7 +430,7 @@ class nescStruct( object ) :
       self.nescType = ""
     #create the struct from nescType args
     elif len(varargs) >= 1 and ( type(varargs[0]) == str or
-                                 type(varargs[0]) == unicode ) :
+                                 type(varargs[0]) == str ) :
       self.nescType = varargs[0]
       self._parseNescTypeFields(varargs[1:])
     ## parse the struct def from xml
@@ -453,8 +453,8 @@ class nescStruct( object ) :
     self.__initialized = True
 
   def __getattr__(self, name) :
-    if self.__dict__.has_key("value") :
-      if self.value.has_key(name) :
+    if "value" in self.__dict__ :
+      if name in self.value :
         if self.value[name].__class__ == nescType :
           return self.value[name].value
         else :
@@ -463,15 +463,15 @@ class nescStruct( object ) :
       raise AttributeError("No such field \"%s\" in the nescStruct \"%s\"" % (name, self.nescType))
 
   def __setattr__(self, name, value) :
-    if not self.__dict__.has_key("_nescStruct__initialized") :
+    if "_nescStruct__initialized" not in self.__dict__ :
       self.__dict__[name] = value
       return
-    if self.value.has_key(name) :
+    if name in self.value :
       if self.value[name].__class__ == nescType :
           self.value[name].value = value;
       else :
           self.value[name] = value;
-    elif self.__dict__.has_key(name) :
+    elif name in self.__dict__ :
       self.__dict__[name] = value
     else :
       raise AttributeError("No such field \"%s\" in the nescStruct \"%s\"" % (name, self.nescType))
@@ -576,8 +576,8 @@ class nescStruct( object ) :
       #the following loop is just type checking for bit fields.  Can we do this on setattr?
       for i in range(len(newBits)-field["bitSize"]):
           if newBits[i] == "1":
-              print "Bit-field type error: value of %s.%s being truncated" % (self.nescType,
-                                                        field["name"])
+              print("Bit-field type error: value of %s.%s being truncated" % (self.nescType,
+                                                        field["name"]))
     for i in range(len(bits), self.size*8) :
       bits += "0"
     bytes = bin2hex(bits)
@@ -773,6 +773,6 @@ def hex2bin(bytes) :
 
 def TestAppTypes() :
     testRpc = appTypes('/home/kamin/tinyos-1.x/contrib/hood/apps/TestRpc/build/telosb/nesc.xml')
-    print testRpc
+    print(testRpc)
 
 if __name__ == "__main__": TestAppTypes()

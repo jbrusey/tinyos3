@@ -32,11 +32,11 @@ import re
 import socket
 import sys
 
-from PacketSource import *
-from Platform import *
-from SerialProtocol import *
+from .PacketSource import *
+from .Platform import *
+from .SerialProtocol import *
 if sys.platform != 'cygwin':
-    from SerialIO import *
+    from .SerialIO import *
 
 class SerialSource(PacketSource):
     def __init__(self, dispatcher, args):

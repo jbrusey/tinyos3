@@ -30,7 +30,7 @@
 #
 import socket
 
-from IO import *
+from .IO import *
 
 class SocketIO(IO):
     def __init__(self, host, port):
@@ -52,7 +52,7 @@ class SocketIO(IO):
         self.done = True
 
     def open(self):
-        print "SocketIO: Connecting socket to "+str(self.host)+":"+str(self.port)
+        print("SocketIO: Connecting socket to "+str(self.host)+":"+str(self.port))
         self.socket.connect((self.host, self.port))
         self.socket.settimeout(1)
 

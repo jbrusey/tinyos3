@@ -34,8 +34,8 @@
 #  - Handle acknowledgements correctly
 
 from threading import Lock, Condition, Thread
-from IO import IODone
-from Serial import Serial
+from .IO import IODone
+from .Serial import Serial
 
 SYNC_BYTE = Serial.HDLC_FLAG_BYTE
 ESCAPE_BYTE = Serial.HDLC_CTLESC_BYTE 
@@ -78,7 +78,7 @@ class RXThread(Thread):
                     with self.prot.ackCV:
                         if self.prot.lastAck:
                             if DEBUG:
-                                print "Warning: last ack not cleared"
+                                print("Warning: last ack not cleared")
                         self.prot.lastAck = packet
                         self.prot.ackCV.notify()
                 else:
@@ -136,13 +136,13 @@ class SerialProtocol:
         while True:
             if not self.inSync:
                 if DEBUG:
-                    print "resynchronizing...",
+                    print("resynchronizing...", end=' ')
 
                 while self.ins.read(1) != chr(SYNC_BYTE):
                     self.outs.write(chr(SYNC_BYTE))
                     self.outs.write(chr(SYNC_BYTE))
                 if DEBUG:
-                    print "synchronized"
+                    print("synchronized")
 
                 self.inSync = True
                 count = 0
@@ -152,7 +152,7 @@ class SerialProtocol:
 
             if count >= MTU:
                 if DEBUG:
-                    print "packet too long"
+                    print("packet too long")
                 self.inSync = False
                 continue
 
@@ -162,7 +162,7 @@ class SerialProtocol:
                 if b == SYNC_BYTE:
                     # sync byte following escape is an error, resync
                     if DEBUG:
-                        print "unexpected sync byte"
+                        print("unexpected sync byte")
                     self.inSync = False
                     continue
 
@@ -183,15 +183,15 @@ class SerialProtocol:
                 computedCrc = crc(packet)
 
                 if DEBUG:
-                    print " len: %d" % (len(receiveBuffer))
-                    print " rcrc: %x ccrc: %x" % (readCrc, computedCrc)
+                    print(" len: %d" % (len(receiveBuffer)))
+                    print(" rcrc: %x ccrc: %x" % (readCrc, computedCrc))
 
                 if readCrc == computedCrc:
                     return packet
                 else:
                     if DEBUG:
-                        print "bad packet"
-                        print receiveBuffer
+                        print("bad packet")
+                        print(receiveBuffer)
                     # We don't lose sync here. If we did, garbage on the line at
                     # startup will cause loss of the first packet.
                     count = 0
@@ -205,8 +205,8 @@ class SerialProtocol:
 
     def writePacket(self, data):
         if DEBUG:
-            print "Writing packet:"
-            print " ".join(map(hex, data))
+            print("Writing packet:")
+            print(" ".join(map(hex, data)))
         attemptsLeft = TX_ATTEMPT_LIMIT
         self.seqNo = (self.seqNo + 1) %256
         while attemptsLeft:
@@ -216,7 +216,7 @@ class SerialProtocol:
                 break
             except NoAckException:
                 if DEBUG:
-                    print "NO ACK:", self.seqNo
+                    print("NO ACK:", self.seqNo)
 
     def writeFramedPacket(self, frameType, sn, data):
         crc = 0
@@ -239,7 +239,7 @@ class SerialProtocol:
 
         frame += chr(SYNC_BYTE)
         if DEBUG:
-            print "Framed Write: (%x) "%sn+" ".join(map(hex, frame))
+            print("Framed Write: (%x) "%sn+" ".join(map(hex, frame)))
         self.outs.write(frame)
         with self.ackCV:
             self.ackCV.wait(0.25)

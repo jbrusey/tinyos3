@@ -31,10 +31,10 @@
 import re
 import socket
 
-from PacketSource import *
-from Platform import *
-from SFProtocol import *
-from SocketIO import *
+from .PacketSource import *
+from .Platform import *
+from .SFProtocol import *
+from .SocketIO import *
 
 class SFSource(PacketSource):
     def __init__(self, dispatcher, args):

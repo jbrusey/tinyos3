@@ -32,8 +32,8 @@ import signal
 import sys
 import traceback
 
-from IO import *
-from ThreadTask import *
+from .IO import *
+from .ThreadTask import *
 from threading import Semaphore
 
 DEBUG = False
@@ -61,15 +61,15 @@ class PacketSource(ThreadTask):
     def __call__(self):
         try:
             self.open()
-        except Exception, x:
+        except Exception as x:
             if DEBUG:
-                print "Exception while opening packet source:"
-                print x
-                print traceback.print_tb(sys.exc_info()[2])
+                print("Exception while opening packet source:")
+                print(x)
+                print(traceback.print_tb(sys.exc_info()[2]))
             self.done = True
         except:
             if DEBUG:
-                print "Unknown exception while opening packet source"
+                print("Unknown exception while opening packet source")
             self.done = True
         finally:
             self.semaphore.release()
@@ -79,37 +79,37 @@ class PacketSource(ThreadTask):
                 packet = self.readPacket()
             except IODone:
                 if DEBUG:
-                    print "IO finished"
+                    print("IO finished")
                 break
-            except Exception, x:
+            except Exception as x:
                 if DEBUG:
-                    print "IO exception:"
-                    print x
-                    print traceback.print_tb(sys.exc_info()[2])
+                    print("IO exception:")
+                    print(x)
+                    print(traceback.print_tb(sys.exc_info()[2]))
                 break
             except:
                 if DEBUG:
-                    print "Unknown IO exception"
+                    print("Unknown IO exception")
                 break
 
             if packet:
                 try:
                     if DEBUG:
-                        print "About to run packet dispatcher!"
+                        print("About to run packet dispatcher!")
                         for i in packet:
-                            print ord(i)," ",
-                        print
+                            print(ord(i)," ", end=' ')
+                        print()
 
                     self.dispatcher.dispatchPacket(self, packet)
-                except Exception, x:
+                except Exception as x:
                     if DEBUG:
-                        print "Exception when dispatching packet:"
-                        print x
-                        print traceback.print_tb(sys.exc_info()[2])
+                        print("Exception when dispatching packet:")
+                        print(x)
+                        print(traceback.print_tb(sys.exc_info()[2]))
 #                    break
                 except:
                     if DEBUG:
-                        print "Unknown exception when dispatching packet"
+                        print("Unknown exception when dispatching packet")
 #                    break
 
         try:

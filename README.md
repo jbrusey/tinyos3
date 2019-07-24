@@ -6,3 +6,6 @@ Currently, the only Python tools avaialable on PyPI for TinyOS are Python2
 compatible only. These tools are an attempt by myself to convert those tools
 over to Python3 while still maintaining compatibility with Python2 TinyOS
 Python applications.
+
+The initial transformation from Python2 to Python3 was performed using the
+Python tool '2to3'.

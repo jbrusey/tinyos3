@@ -24,7 +24,7 @@ def generate_indices(compfiles, intffiles):
       package = fmatch.group(1)
       entity = fmatch.group(2)
       packages[package] = True
-      if not to.has_key(package):
+      if package not in to:
         to[package] = []
       to[package].append((package, entity))
       all.append((package, entity))
@@ -71,7 +71,7 @@ def generate_indices(compfiles, intffiles):
 
   # Per-package index
   def pkglist(l, pkg, kind):
-    if l.has_key(pkg):
+    if pkg in l:
       entitylist(pkgfile, l[pkg], kind)
 
   # collect packages
@@ -82,7 +82,7 @@ def generate_indices(compfiles, intffiles):
   interfaces = {}
   for x in compfiles: add_page(x, components, allcomponents)
   for x in intffiles: add_page(x, interfaces, allinterfaces)
-  packages = packages.keys()
+  packages = list(packages.keys())
   packages.sort(lambda x, y: cmp(x.lower(), y.lower()))
     
   # Package index

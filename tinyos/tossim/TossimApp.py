@@ -134,8 +134,8 @@ class NescTypes( object ) :
       nescType("uint8_t", "unsigned char", "int", "type-int", "B",1,0))
     self.addType(
       nescType("int8_t", "signed char", "int", "type-int", "b", 1, 0))
-    if (platformTypes.has_key("int") and platformTypes["int"] == 4) or \
-       (platformTypes.has_key("unsigned int") and platformTypes["unsigned int"] == 4) :
+    if ("int" in platformTypes and platformTypes["int"] == 4) or \
+       ("unsigned int" in platformTypes and platformTypes["unsigned int"] == 4) :
       self.addType(
         nescType("uint16_t", "unsigned short", "int", "type-int", "H", 2, 0))
       self.addType(
@@ -167,7 +167,7 @@ class NescTypes( object ) :
       nescType("uint64_t", "unsigned long long", "long", "type-int", "Q", 8, 0))
     self.addType(
       nescType("float", "float", "float", "type-float", "f", 4, 0))
-    if platformTypes.has_key("double") and platformTypes["double"] == 8 :
+    if "double" in platformTypes and platformTypes["double"] == 8 :
       self.addType(
         nescType("double", "double", "float", "type-float", "d", 8, 0))
     else : #double is 4 bytes (the default)
@@ -191,7 +191,7 @@ class NescTypes( object ) :
     if not value.nescType in self._typeNames :
       self._typeNames.append(value.nescType)
     self._types[value.nescType] = value #XXX: why does this have to be unconditional??
-    if not self._types.has_key(value.cType):
+    if value.cType not in self._types:
       self._types[value.cType] = value
       self._typeNames.append(value.cType)
     
@@ -236,7 +236,7 @@ class NescTypes( object ) :
         value = typeDef.getAttribute("value")
         name = typeDef.getAttribute("name")
         #if the real value exists and typedef doesn't already exist, copy and rename original
-        if self._types.has_key(value) :
+        if value in self._types :
           newType = deepcopy(self._types[value])
           newType.nescType = name
           self.addType(newType)
@@ -252,7 +252,7 @@ class NescTypes( object ) :
           self.addType(nescStruct(self, typeDef ) )
           numSkipped=0
 
-        except Exception, e:
+        except Exception as e:
           if len(e.args) > 0 and e.args[0] == "Undefined struct":
             #otherwise, put it back in the queue and move on to the next one
             typeDefs.append(typeDef)
@@ -291,7 +291,7 @@ class NescTypes( object ) :
       for pair in self.unknownStructs :
         err += "\t%s (%s)\n" % (pair[0].getAttribute("name"),
                                 pair[1].tagName )
-    if len(err) > 0 : print err
+    if len(err) > 0 : print(err)
     
   def getTypeFromXML(self, xmlDefinition) :
     """Find the type name value given an xml definition.
@@ -323,12 +323,12 @@ class NescTypes( object ) :
     #if the type doesn't already exist, try creating a new one
     try :
       return nescArray(self, xmlDefinition)
-    except Exception, e:
+    except Exception as e:
         if len(e.args) <= 0 or e.args[0] != "Not array definition":
           raise
     try :
       return nescPointer(self, xmlDefinition)
-    except Exception, e:
+    except Exception as e:
         if len(e.args) <= 0 or e.args[0] != "Not pointer definition":
           raise
       

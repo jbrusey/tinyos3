@@ -82,8 +82,8 @@ def factory_from_platform(platform):
     try:
         mod = __import__("tinyos.packet.%s" % platform)
         return mod.packet.__dict__[platform].TOS_Msg
-    except Exception, x:
+    except Exception as x:
         if DEBUG:
-            print >>sys.stderr, x
-            print >>sys.stderr, traceback.print_tb(sys.exc_info()[2])
+            print(x, file=sys.stderr)
+            print(traceback.print_tb(sys.exc_info()[2]), file=sys.stderr)
         raise UnknownPlatform()

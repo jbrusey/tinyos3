@@ -89,9 +89,9 @@ class MoteIF:
             data = packet[data_start:data_end]
             amType = serial_pkt.get_header_type()
 
-        except Exception, x:
-            print >>sys.stderr, x
-            print >>sys.stderr, traceback.print_tb(sys.exc_info()[2])
+        except Exception as x:
+            print(x, file=sys.stderr)
+            print(traceback.print_tb(sys.exc_info()[2]), file=sys.stderr)
 
         for l in self.listeners:
             amTypes = self.listeners[l]
@@ -103,9 +103,9 @@ class MoteIF:
                                    addr=serial_pkt.get_header_src(),
                                    gid=serial_pkt.get_header_group())
                     l.receive(source, msg)
-                except Exception, x:
-                    print >>sys.stderr, x
-                    print >>sys.stderr, traceback.print_tb(sys.exc_info()[2])
+                except Exception as x:
+                    print(x, file=sys.stderr)
+                    print(traceback.print_tb(sys.exc_info()[2]), file=sys.stderr)
 
     def sendMsg(self, dest, addr, amType, group, msg):
         try:
@@ -122,9 +122,9 @@ class MoteIF:
             data += payload
 
             dest.writePacket(data)
-        except Exception, x:
-            print >>sys.stderr, x
-            print >>sys.stderr, traceback.print_tb(sys.exc_info()[2])
+        except Exception as x:
+            print(x, file=sys.stderr)
+            print(traceback.print_tb(sys.exc_info()[2]), file=sys.stderr)
 
     def addSource(self, name=None):
         if name == None:

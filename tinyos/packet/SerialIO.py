@@ -30,7 +30,7 @@
 #
 import serial
 
-from IO import *
+from .IO import *
 
 class SerialIO(IO):
 	def __init__(self, device, baud):

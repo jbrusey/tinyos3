@@ -60,13 +60,13 @@ class Watcher(Singleton):
         except KeyboardInterrupt:
             # I put the capital B in KeyBoardInterrupt so I can
             # tell when the Watcher gets the SIGINT
-            print 'KeyBoardInterrupt'
+            print('KeyBoardInterrupt')
             self.kill()
         sys.exit()
 
     def kill(self):
         try:
             os.kill(self.child, signal.SIGKILL)
-        except OSError, x: 
-            print "os.kill failed"
-            print x
+        except OSError as x: 
+            print("os.kill failed")
+            print(x)

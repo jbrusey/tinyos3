@@ -1,0 +1,13 @@
+Metadata-Version: 1.1
+Name: tinyos
+Version: 2.1.2.3
+Summary: Highly experimental TinyOS python tools (Unofficial Packaging)
+Home-page: UNKNOWN
+Author: UNKNOWN
+Author-email: UNKNOWN
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Topic :: Software Development :: Libraries :: Python Modules

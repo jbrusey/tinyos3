@@ -14,7 +14,7 @@ setup(
     description="Highly experimental TinyOS python tools (Unofficial Packaging)",
     classifiers=[
         "Intended Audience :: Developers",
-        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.7",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     packages=find_packages(exclude="tests"),

@@ -1,13 +1,15 @@
 Metadata-Version: 1.1
-Name: tinyos
+Name: tinyos3
 Version: 2.1.2.3
-Summary: Highly experimental TinyOS python tools (Unofficial Packaging)
-Home-page: UNKNOWN
-Author: UNKNOWN
+Summary: Highly experimental TinyOS python tools with Python3 support (Unofficial Packaging)
+Home-page: https://github.com/gollum18/tinyos3
+Author: TinyOS Contributors
 Author-email: UNKNOWN
-License: UNKNOWN
+Maintainer: Christen Ford
+Maintainer-email: c.t.ford@vikes.csuohio.edu
+License: NONE
 Description: UNKNOWN
 Platform: UNKNOWN
 Classifier: Intended Audience :: Developers
-Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3.7
 Classifier: Topic :: Software Development :: Libraries :: Python Modules

@@ -9,8 +9,13 @@ def read(*paths):
         return fptr.read()
 
 setup(
-    name="tinyos",
+    name="tinyos3",
     version="2.1.2.3",
+    author="TinyOS Contributors",
+    author_email="UNKNOWN",
+    maintainer="Christen Ford",
+    maintainer_email="c.t.ford@vikes.csuohio.edu",
+    url="https://github.com/gollum18/tinyos3",
     description="Highly experimental TinyOS python tools (Unofficial Packaging)",
     classifiers=[
         "Intended Audience :: Developers",

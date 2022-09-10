@@ -31,6 +31,7 @@
 class IODone(Exception):
     pass
 
+
 class IO:
     def __init__(self):
         self.done = False

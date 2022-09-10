@@ -35,19 +35,21 @@ import sys
 from .PacketSource import *
 from .Platform import *
 from .SerialProtocol import *
-if sys.platform != 'cygwin':
+
+if sys.platform != "cygwin":
     from .SerialIO import *
+
 
 class SerialSource(PacketSource):
     def __init__(self, dispatcher, args):
         PacketSource.__init__(self, dispatcher)
 
-        m = re.match(r'(.*):(.*)', args)
+        m = re.match(r"(.*):(.*)", args)
         if m == None:
             raise PacketSourceException("bad arguments")
 
         (device, name) = m.groups()
-        if re.match(r'^\d+$', name):
+        if re.match(r"^\d+$", name):
             baud = int(name)
             self.factory = default_factory()
         else:
@@ -77,4 +79,3 @@ class SerialSource(PacketSource):
 
     def writePacket(self, packet):
         self.prot.writePacket(packet)
-

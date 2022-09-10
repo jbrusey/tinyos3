@@ -36,11 +36,12 @@ from .Platform import *
 from .SFProtocol import *
 from .SocketIO import *
 
+
 class SFSource(PacketSource):
     def __init__(self, dispatcher, args):
         PacketSource.__init__(self, dispatcher)
 
-        m = re.match(r'(.*):(.*)', args)
+        m = re.match(r"(.*):(.*)", args)
         if m == None:
             raise PacketSourceException("bad arguments")
 

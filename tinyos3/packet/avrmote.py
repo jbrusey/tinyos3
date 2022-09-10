@@ -4,7 +4,7 @@
 # message type.
 #
 
-import tinyos.message.Message
+import tinyos3.message.Message
 
 # The default size of this message type in bytes.
 DEFAULT_MESSAGE_SIZE = 43
@@ -12,18 +12,21 @@ DEFAULT_MESSAGE_SIZE = 43
 # The Active Message type associated with this message.
 AM_TYPE = -1
 
-class TOS_Msg(tinyos.message.Message.Message):
+
+class TOS_Msg(tinyos3.message.Message.Message):
     # Create a new TOS_Msg of size 43.
     def __init__(self, data="", addr=None, gid=None, base_offset=0, data_length=43):
-        tinyos.message.Message.Message.__init__(self, data, addr, gid, base_offset, data_length)
+        tinyos3.message.Message.Message.__init__(
+            self, data, addr, gid, base_offset, data_length
+        )
         self.amTypeSet(AM_TYPE)
-    
+
     # Get AM_TYPE
     def get_amType(cls):
         return AM_TYPE
-    
+
     get_amType = classmethod(get_amType)
-    
+
     #
     # Return a String representation of this message. Includes the
     # message type name and the non-indexed field values.
@@ -47,10 +50,10 @@ class TOS_Msg(tinyos.message.Message.Message):
         except:
             pass
         try:
-            s += "  [data=";
+            s += "  [data="
             for i in range(0, 29):
-                s += "0x%x " % (self.getElement_data(i) & 0xff)
-            s += "]\n";
+                s += "0x%x " % (self.getElement_data(i) & 0xFF)
+            s += "]\n"
         except:
             pass
         try:
@@ -93,49 +96,49 @@ class TOS_Msg(tinyos.message.Message.Message):
     #
     def isSigned_addr(self):
         return False
-    
+
     #
     # Return whether the field 'addr' is an array (False).
     #
     def isArray_addr(self):
         return False
-    
+
     #
     # Return the offset (in bytes) of the field 'addr'
     #
     def offset_addr(self):
-        return (0 / 8)
-    
+        return 0 / 8
+
     #
     # Return the offset (in bits) of the field 'addr'
     #
     def offsetBits_addr(self):
         return 0
-    
+
     #
     # Return the value (as a int) of the field 'addr'
     #
     def get_addr(self):
         return self.getUIntElement(self.offsetBits_addr(), 16, 0)
-    
+
     #
     # Set the value of the field 'addr'
     #
     def set_addr(self, value):
         self.setUIntElement(self.offsetBits_addr(), 16, value, 0)
-    
+
     #
     # Return the size, in bytes, of the field 'addr'
     #
     def size_addr(self):
-        return (16 / 8)
-    
+        return 16 / 8
+
     #
     # Return the size, in bits, of the field 'addr'
     #
     def sizeBits_addr(self):
         return 16
-    
+
     #
     # Accessor methods for field: type
     #   Field type: short, unsigned
@@ -148,49 +151,49 @@ class TOS_Msg(tinyos.message.Message.Message):
     #
     def isSigned_type(self):
         return False
-    
+
     #
     # Return whether the field 'type' is an array (False).
     #
     def isArray_type(self):
         return False
-    
+
     #
     # Return the offset (in bytes) of the field 'type'
     #
     def offset_type(self):
-        return (16 / 8)
-    
+        return 16 / 8
+
     #
     # Return the offset (in bits) of the field 'type'
     #
     def offsetBits_type(self):
         return 16
-    
+
     #
     # Return the value (as a short) of the field 'type'
     #
     def get_type(self):
         return self.getUIntElement(self.offsetBits_type(), 8, 0)
-    
+
     #
     # Set the value of the field 'type'
     #
     def set_type(self, value):
         self.setUIntElement(self.offsetBits_type(), 8, value, 0)
-    
+
     #
     # Return the size, in bytes, of the field 'type'
     #
     def size_type(self):
-        return (8 / 8)
-    
+        return 8 / 8
+
     #
     # Return the size, in bits, of the field 'type'
     #
     def sizeBits_type(self):
         return 8
-    
+
     #
     # Accessor methods for field: group
     #   Field type: short, unsigned
@@ -203,49 +206,49 @@ class TOS_Msg(tinyos.message.Message.Message):
     #
     def isSigned_group(self):
         return False
-    
+
     #
     # Return whether the field 'group' is an array (False).
     #
     def isArray_group(self):
         return False
-    
+
     #
     # Return the offset (in bytes) of the field 'group'
     #
     def offset_group(self):
-        return (24 / 8)
-    
+        return 24 / 8
+
     #
     # Return the offset (in bits) of the field 'group'
     #
     def offsetBits_group(self):
         return 24
-    
+
     #
     # Return the value (as a short) of the field 'group'
     #
     def get_group(self):
         return self.getUIntElement(self.offsetBits_group(), 8, 0)
-    
+
     #
     # Set the value of the field 'group'
     #
     def set_group(self, value):
         self.setUIntElement(self.offsetBits_group(), 8, value, 0)
-    
+
     #
     # Return the size, in bytes, of the field 'group'
     #
     def size_group(self):
-        return (8 / 8)
-    
+        return 8 / 8
+
     #
     # Return the size, in bits, of the field 'group'
     #
     def sizeBits_group(self):
         return 8
-    
+
     #
     # Accessor methods for field: length
     #   Field type: short, unsigned
@@ -258,49 +261,49 @@ class TOS_Msg(tinyos.message.Message.Message):
     #
     def isSigned_length(self):
         return False
-    
+
     #
     # Return whether the field 'length' is an array (False).
     #
     def isArray_length(self):
         return False
-    
+
     #
     # Return the offset (in bytes) of the field 'length'
     #
     def offset_length(self):
-        return (32 / 8)
-    
+        return 32 / 8
+
     #
     # Return the offset (in bits) of the field 'length'
     #
     def offsetBits_length(self):
         return 32
-    
+
     #
     # Return the value (as a short) of the field 'length'
     #
     def get_length(self):
         return self.getUIntElement(self.offsetBits_length(), 8, 0)
-    
+
     #
     # Set the value of the field 'length'
     #
     def set_length(self, value):
         self.setUIntElement(self.offsetBits_length(), 8, value, 0)
-    
+
     #
     # Return the size, in bytes, of the field 'length'
     #
     def size_length(self):
-        return (8 / 8)
-    
+        return 8 / 8
+
     #
     # Return the size, in bits, of the field 'length'
     #
     def sizeBits_length(self):
         return 8
-    
+
     #
     # Accessor methods for field: data
     #   Field type: byte[], unsigned
@@ -313,13 +316,13 @@ class TOS_Msg(tinyos.message.Message.Message):
     #
     def isSigned_data(self):
         return False
-    
+
     #
     # Return whether the field 'data' is an array (True).
     #
     def isArray_data(self):
         return True
-    
+
     #
     # Return the offset (in bytes) of the field 'data'
     #
@@ -328,8 +331,8 @@ class TOS_Msg(tinyos.message.Message.Message):
         if index1 < 0 or index1 >= 29:
             raise IndexError
         offset += 0 + index1 * 8
-        return (offset / 8)
-    
+        return offset / 8
+
     #
     # Return the offset (in bits) of the field 'data'
     #
@@ -339,16 +342,16 @@ class TOS_Msg(tinyos.message.Message.Message):
             raise IndexError
         offset += 0 + index1 * 8
         return offset
-    
+
     #
     # Return the entire array 'data' as a byte[]
     #
     def get_data(self):
-        tmp = [None]*29
-        for index0 in range (0, self.numElements_data(0)):
-                tmp[index0] = self.getElement_data(index0)
+        tmp = [None] * 29
+        for index0 in range(0, self.numElements_data(0)):
+            tmp[index0] = self.getElement_data(index0)
         return tmp
-    
+
     #
     # Set the contents of the array 'data' from the given byte[]
     #
@@ -361,80 +364,83 @@ class TOS_Msg(tinyos.message.Message.Message):
     #
     def getElement_data(self, index1):
         return self.getSIntElement(self.offsetBits_data(index1), 8)
-    
+
     #
     # Set an element of the array 'data'
     #
     def setElement_data(self, index1, value):
         self.setSIntElement(self.offsetBits_data(index1), 8, value)
-    
+
     #
     # Return the total size, in bytes, of the array 'data'
     #
     def totalSize_data(self):
-        return (232 / 8)
-    
+        return 232 / 8
+
     #
     # Return the total size, in bits, of the array 'data'
     #
     def totalSizeBits_data(self):
         return 232
-    
+
     #
     # Return the size, in bytes, of each element of the array 'data'
     #
     def elementSize_data(self):
-        return (8 / 8)
-    
+        return 8 / 8
+
     #
     # Return the size, in bits, of each element of the array 'data'
     #
     def elementSizeBits_data(self):
         return 8
-    
+
     #
     # Return the number of dimensions in the array 'data'
     #
     def numDimensions_data(self):
         return 1
-    
+
     #
     # Return the number of elements in the array 'data'
     #
     def numElements_data():
         return 29
-    
+
     #
     # Return the number of elements in the array 'data'
     # for the given dimension.
     #
     def numElements_data(self, dimension):
-        array_dims = [ 29,  ]
+        array_dims = [
+            29,
+        ]
         if dimension < 0 or dimension >= 1:
             raise IndexException
         if array_dims[dimension] == 0:
             raise IndexError
         return array_dims[dimension]
-    
+
     #
     # Fill in the array 'data' with a String
     #
     def setString_data(self, s):
-         l = len(s)
-         for i in range(0, l):
-             self.setElement_data(i, ord(s[i]));
-         self.setElement_data(l, 0) #null terminate
-    
+        l = len(s)
+        for i in range(0, l):
+            self.setElement_data(i, ord(s[i]))
+        self.setElement_data(l, 0)  # null terminate
+
     #
     # Read the array 'data' as a String
     #
     def getString_data(self):
-        carr = "";
+        carr = ""
         for i in range(0, 4000):
-            if self.getElement_data(i) == chr(0):                break
+            if self.getElement_data(i) == chr(0):
+                break
             carr += self.getElement_data(i)
         return carr
-    
+
     #
     # Accessor methods for field: crc
     #   Field type: int, unsigned
@@ -447,49 +453,49 @@ class TOS_Msg(tinyos.message.Message.Message):
     #
     def isSigned_crc(self):
         return False
-    
+
     #
     # Return whether the field 'crc' is an array (False).
     #
     def isArray_crc(self):
         return False
-    
+
     #
     # Return the offset (in bytes) of the field 'crc'
     #
     def offset_crc(self):
-        return (272 / 8)
-    
+        return 272 / 8
+
     #
     # Return the offset (in bits) of the field 'crc'
     #
     def offsetBits_crc(self):
         return 272
-    
+
     #
     # Return the value (as a int) of the field 'crc'
     #
     def get_crc(self):
         return self.getUIntElement(self.offsetBits_crc(), 16, 0)
-    
+
     #
     # Set the value of the field 'crc'
     #
     def set_crc(self, value):
         self.setUIntElement(self.offsetBits_crc(), 16, value, 0)
-    
+
     #
     # Return the size, in bytes, of the field 'crc'
     #
     def size_crc(self):
-        return (16 / 8)
-    
+        return 16 / 8
+
     #
     # Return the size, in bits, of the field 'crc'
     #
     def sizeBits_crc(self):
         return 16
-    
+
     #
     # Accessor methods for field: strength
     #   Field type: int, unsigned
@@ -502,49 +508,49 @@ class TOS_Msg(tinyos.message.Message.Message):
     #
     def isSigned_strength(self):
         return False
-    
+
     #
     # Return whether the field 'strength' is an array (False).
     #
     def isArray_strength(self):
         return False
-    
+
     #
     # Return the offset (in bytes) of the field 'strength'
     #
     def offset_strength(self):
-        return (288 / 8)
-    
+        return 288 / 8
+
     #
     # Return the offset (in bits) of the field 'strength'
     #
     def offsetBits_strength(self):
         return 288
-    
+
     #
     # Return the value (as a int) of the field 'strength'
     #
     def get_strength(self):
         return self.getUIntElement(self.offsetBits_strength(), 16, 0)
-    
+
     #
     # Set the value of the field 'strength'
     #
     def set_strength(self, value):
         self.setUIntElement(self.offsetBits_strength(), 16, value, 0)
-    
+
     #
     # Return the size, in bytes, of the field 'strength'
     #
     def size_strength(self):
-        return (16 / 8)
-    
+        return 16 / 8
+
     #
     # Return the size, in bits, of the field 'strength'
     #
     def sizeBits_strength(self):
         return 16
-    
+
     #
     # Accessor methods for field: ack
     #   Field type: short, unsigned
@@ -557,49 +563,49 @@ class TOS_Msg(tinyos.message.Message.Message):
     #
     def isSigned_ack(self):
         return False
-    
+
     #
     # Return whether the field 'ack' is an array (False).
     #
     def isArray_ack(self):
         return False
-    
+
     #
     # Return the offset (in bytes) of the field 'ack'
     #
     def offset_ack(self):
-        return (304 / 8)
-    
+        return 304 / 8
+
     #
     # Return the offset (in bits) of the field 'ack'
     #
     def offsetBits_ack(self):
         return 304
-    
+
     #
     # Return the value (as a short) of the field 'ack'
     #
     def get_ack(self):
         return self.getUIntElement(self.offsetBits_ack(), 8, 0)
-    
+
     #
     # Set the value of the field 'ack'
     #
     def set_ack(self, value):
         self.setUIntElement(self.offsetBits_ack(), 8, value, 0)
-    
+
     #
     # Return the size, in bytes, of the field 'ack'
     #
     def size_ack(self):
-        return (8 / 8)
-    
+        return 8 / 8
+
     #
     # Return the size, in bits, of the field 'ack'
     #
     def sizeBits_ack(self):
         return 8
-    
+
     #
     # Accessor methods for field: time
     #   Field type: int, unsigned
@@ -612,49 +618,49 @@ class TOS_Msg(tinyos.message.Message.Message):
     #
     def isSigned_time(self):
         return False
-    
+
     #
     # Return whether the field 'time' is an array (False).
     #
     def isArray_time(self):
         return False
-    
+
     #
     # Return the offset (in bytes) of the field 'time'
     #
     def offset_time(self):
-        return (312 / 8)
-    
+        return 312 / 8
+
     #
     # Return the offset (in bits) of the field 'time'
     #
     def offsetBits_time(self):
         return 312
-    
+
     #
     # Return the value (as a int) of the field 'time'
     #
     def get_time(self):
         return self.getUIntElement(self.offsetBits_time(), 16, 0)
-    
+
     #
     # Set the value of the field 'time'
     #
     def set_time(self, value):
         self.setUIntElement(self.offsetBits_time(), 16, value, 0)
-    
+
     #
     # Return the size, in bytes, of the field 'time'
     #
     def size_time(self):
-        return (16 / 8)
-    
+        return 16 / 8
+
     #
     # Return the size, in bits, of the field 'time'
     #
     def sizeBits_time(self):
         return 16
-    
+
     #
     # Accessor methods for field: sendSecurityMode
     #   Field type: short, unsigned
@@ -667,49 +673,49 @@ class TOS_Msg(tinyos.message.Message.Message):
     #
     def isSigned_sendSecurityMode(self):
         return False
-    
+
     #
     # Return whether the field 'sendSecurityMode' is an array (False).
     #
     def isArray_sendSecurityMode(self):
         return False
-    
+
     #
     # Return the offset (in bytes) of the field 'sendSecurityMode'
     #
     def offset_sendSecurityMode(self):
-        return (328 / 8)
-    
+        return 328 / 8
+
     #
     # Return the offset (in bits) of the field 'sendSecurityMode'
     #
     def offsetBits_sendSecurityMode(self):
         return 328
-    
+
     #
     # Return the value (as a short) of the field 'sendSecurityMode'
     #
     def get_sendSecurityMode(self):
         return self.getUIntElement(self.offsetBits_sendSecurityMode(), 8, 0)
-    
+
     #
     # Set the value of the field 'sendSecurityMode'
     #
     def set_sendSecurityMode(self, value):
         self.setUIntElement(self.offsetBits_sendSecurityMode(), 8, value, 0)
-    
+
     #
     # Return the size, in bytes, of the field 'sendSecurityMode'
     #
     def size_sendSecurityMode(self):
-        return (8 / 8)
-    
+        return 8 / 8
+
     #
     # Return the size, in bits, of the field 'sendSecurityMode'
     #
     def sizeBits_sendSecurityMode(self):
         return 8
-    
+
     #
     # Accessor methods for field: receiveSecurityMode
     #   Field type: short, unsigned
@@ -722,47 +728,45 @@ class TOS_Msg(tinyos.message.Message.Message):
     #
     def isSigned_receiveSecurityMode(self):
         return False
-    
+
     #
     # Return whether the field 'receiveSecurityMode' is an array (False).
     #
     def isArray_receiveSecurityMode(self):
         return False
-    
+
     #
     # Return the offset (in bytes) of the field 'receiveSecurityMode'
     #
     def offset_receiveSecurityMode(self):
-        return (336 / 8)
-    
+        return 336 / 8
+
     #
     # Return the offset (in bits) of the field 'receiveSecurityMode'
     #
     def offsetBits_receiveSecurityMode(self):
         return 336
-    
+
     #
     # Return the value (as a short) of the field 'receiveSecurityMode'
     #
     def get_receiveSecurityMode(self):
         return self.getUIntElement(self.offsetBits_receiveSecurityMode(), 8, 0)
-    
+
     #
     # Set the value of the field 'receiveSecurityMode'
     #
     def set_receiveSecurityMode(self, value):
         self.setUIntElement(self.offsetBits_receiveSecurityMode(), 8, value, 0)
-    
+
     #
     # Return the size, in bytes, of the field 'receiveSecurityMode'
     #
     def size_receiveSecurityMode(self):
-        return (8 / 8)
-    
+        return 8 / 8
+
     #
     # Return the size, in bits, of the field 'receiveSecurityMode'
     #
     def sizeBits_receiveSecurityMode(self):
         return 8
-    
-

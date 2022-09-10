@@ -30,6 +30,7 @@
 #
 import struct
 
+
 class PacketDispatcher:
     def __init__(self):
         self.listeners = {}
@@ -48,7 +49,7 @@ class PacketDispatcher:
         (addr, amType, group, length) = struct.unpack("<HBBB", packet[0:5])
         msgData = packet[5:]
 
-        #print (addr, amType, group, length)
+        # print (addr, amType, group, length)
 
         for l in self.listeners:
             amTypes = self.listeners[l]

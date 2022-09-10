@@ -34,23 +34,26 @@ import re
 import struct
 import sys
 import traceback
-from tinyos.utils.Watcher import Watcher
+from tinyos3.utils.Watcher import Watcher
 
-from tinyos.packet.Serial import Serial
-from tinyos.message.SerialPacket import SerialPacket
-import tinyos.packet.PacketDispatcher
-import tinyos.packet.PacketSource
-import tinyos.packet.SFSource
+from tinyos3.packet.Serial import Serial
+from tinyos3.message.SerialPacket import SerialPacket
+import tinyos3.packet.PacketDispatcher
+import tinyos3.packet.PacketSource
+import tinyos3.packet.SFSource
+
 try:
-    import tinyos.packet.SerialSource
+    import tinyos3.packet.SerialSource
 except:
-    tinyos.packet.SerialSource = None
+    tinyos3.packet.SerialSource = None
 
 DEBUG = False
+
 
 class MoteIFException(Exception):
     def __init__(self, *args):
         self.args = args
+
 
 class MoteIF:
     def __init__(self):
@@ -68,20 +71,18 @@ class MoteIF:
         del self.listeners[listener]
 
     def dispatchPacket(self, source, packet):
-        #try:
-            #print "Packet length: ", len(packet)
-            #            print "Dispatching from MoteIF"
-            #             for i in packet:
-            #                 print ord(i)," ",
-            #             print
+        # try:
+        # print "Packet length: ", len(packet)
+        #            print "Dispatching from MoteIF"
+        #             for i in packet:
+        #                 print ord(i)," ",
+        #             print
         try:
             # Message.py ignores base_offset, so we'll just chop off
             # the first byte (the SERIAL_AMTYPE) here.
-            serial_pkt = SerialPacket(packet[1:],
-                                      data_length=len(packet)-1)
+            serial_pkt = SerialPacket(packet[1:], data_length=len(packet) - 1)
         except:
             traceback.print_exc()
-
 
         try:
             data_start = serial_pkt.offset_data(0) + 1
@@ -98,10 +99,12 @@ class MoteIF:
             if amType in amTypes:
                 try:
                     msgClass = amTypes[amType]
-                    msg = msgClass(data=data,
-                                   data_length = len(data),
-                                   addr=serial_pkt.get_header_src(),
-                                   gid=serial_pkt.get_header_group())
+                    msg = msgClass(
+                        data=data,
+                        data_length=len(data),
+                        addr=serial_pkt.get_header_src(),
+                        gid=serial_pkt.get_header_group(),
+                    )
                     l.receive(source, msg)
                 except Exception as x:
                     print(x, file=sys.stderr)
@@ -116,9 +119,9 @@ class MoteIF:
             msg.set_header_type(int(amType))
             msg.set_header_length(len(payload))
 
-            # from tinyos.packet.Serial
+            # from tinyos3.packet.Serial
             data = chr(Serial.TOS_SERIAL_ACTIVE_MESSAGE_ID)
-            data += msg.dataGet()[0:msg.offset_data(0)]
+            data += msg.dataGet()[0 : msg.offset_data(0)]
             data += payload
 
             dest.writePacket(data)
@@ -130,24 +133,24 @@ class MoteIF:
         if name == None:
             name = os.environ.get("MOTECOM", "sf@localhost:9002")
 
-        m = re.match(r'([^@]*)@(.*)', name)
+        m = re.match(r"([^@]*)@(.*)", name)
         if m == None:
             raise MoteIFException("base source '%s'" % (name))
 
         (sourceType, args) = m.groups()
 
         if sourceType == "sf":
-            source = tinyos.packet.SFSource.SFSource(self, args)
-        elif sourceType == "serial" and tinyos.packet.SerialSource != None:
-            source = tinyos.packet.SerialSource.SerialSource(self, args)
+            source = tinyos3.packet.SFSource.SFSource(self, args)
+        elif sourceType == "serial" and tinyos3.packet.SerialSource != None:
+            source = tinyos3.packet.SerialSource.SerialSource(self, args)
         else:
             raise MoteIFException("bad source")
         source.start()
-        #block until the source has started up.
+        # block until the source has started up.
         source.semaphore.acquire()
         source.semaphore.release()
 
         return source
 
     def finishAll(self):
-        tinyos.packet.PacketSource.finishAll()
+        tinyos3.packet.PacketSource.finishAll()

@@ -31,6 +31,7 @@
 import threading
 import time
 
+
 class ThreadTask:
     def __init__(self, runner):
         self.done = False
@@ -46,6 +47,7 @@ class ThreadTask:
 
     def finish(self):
         self.runner.remove(self)
+
 
 class ThreadTaskRunner:
     def __init__(self):

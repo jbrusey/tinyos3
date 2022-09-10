@@ -33,9 +33,11 @@ SUBVERSION = " "
 
 PLATFORM_UNKNOWN = 0
 
+
 class SFProtocolException(Exception):
     def __init__(self, *args):
         self.args = args
+
 
 class SFProtocol:
     def __init__(self, ins, outs):
@@ -50,9 +52,9 @@ class SFProtocol:
             print("SFProtocol : version error")
             raise SFProtocolException("protocol version error")
 
-	# Actual version is min received vs our version
+        # Actual version is min received vs our version
         # ourversion = partner[1] & 0xff
-        
+
         if self.platform == None:
             self.platform = PLATFORM_UNKNOWN
 
@@ -60,7 +62,6 @@ class SFProtocol:
 
         # the tinyos-2.x serial forwarder doesn't do that, so the
         # connection is all set up at this point.
-
 
     def readPacket(self):
         size = self.ins.read(1)
@@ -74,4 +75,3 @@ class SFProtocol:
         self.outs.write(chr(len(packet)))
         self.outs.write(packet)
         self.outs.flush()
-        

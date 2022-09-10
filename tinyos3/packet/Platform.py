@@ -35,13 +35,15 @@ import traceback
 
 DEBUG = False
 
-PLATFORMS = {"mica": ("avrmote", 1, 19200),
-             "mica2dot": ("avrmote", 1, 19200),
-             "mica2": ("avrmote", 1, 57600),
-             "telos": ("telos", 2, 57600),
-             "tmote": ("telos", 2, 57600),
-             "micaz": ("avrmote", 3, 57600),
-             "eyes": ("eyes", 4, 19200)}
+PLATFORMS = {
+    "mica": ("avrmote", 1, 19200),
+    "mica2dot": ("avrmote", 1, 19200),
+    "mica2": ("avrmote", 1, 57600),
+    "telos": ("telos", 2, 57600),
+    "tmote": ("telos", 2, 57600),
+    "micaz": ("avrmote", 3, 57600),
+    "eyes": ("eyes", 4, 19200),
+}
 
 ID_AVRMOTE = 1
 ID_TELOS = 2
@@ -50,8 +52,10 @@ ID_EYES = 4
 
 DEFAULT_BAUD = 19200
 
+
 class UnknownPlatform(Exception):
     pass
+
 
 def baud_from_name(name):
     try:
@@ -59,14 +63,17 @@ def baud_from_name(name):
     except:
         raise UnknownPlatform()
 
+
 def default_factory():
     return factory_from_platform("avrmote")
+
 
 def factory_from_name(name):
     try:
         return factory_from_platform(PLATFORMS[name][0])
     except:
         raise UnknownPlatform()
+
 
 def factory_from_id(i):
     if i == ID_AVRMOTE:
@@ -78,9 +85,10 @@ def factory_from_id(i):
     else:
         raise UnknownPlatform()
 
+
 def factory_from_platform(platform):
     try:
-        mod = __import__("tinyos.packet.%s" % platform)
+        mod = __import__("tinyos3.packet.%s" % platform)
         return mod.packet.__dict__[platform].TOS_Msg
     except Exception as x:
         if DEBUG:

@@ -31,9 +31,11 @@
 
 import struct
 
+
 class MessageException(Exception):
     def __init__(self, *args):
         self.args = args
+
 
 class Message:
     def __init__(self, data, addr=None, gid=None, base_offset=0, data_length=None):
@@ -45,13 +47,13 @@ class Message:
             self.data_length = data_length
 
             if data == None or len(data) != data_length:
-                self.data = chr(0) * data_length
+                self.data = b"\x00" * data_length
 
         else:
             self.data_length = len(data)
 
             self.am_type = 0
-            
+
     def dataGet(self):
         return self.data
 
@@ -75,8 +77,10 @@ class Message:
 
     def checkBounds(self, offset, length):
         if offset < 0 or length <= 0 or offset + length > (self.data_length * 8):
-            raise MessageException("Message.checkBounds: bad offset (%d) or length (%d), for data_length %d" \
-                                   % (offset, length, self.data_length))
+            raise MessageException(
+                "Message.checkBounds: bad offset (%d) or length (%d), for data_length %d"
+                % (offset, length, self.data_length)
+            )
 
         if offset & 7 != 0:
             raise MessageException("Cannot deal with bit fields")
@@ -86,16 +90,16 @@ class Message:
 
     def getUIntElement(self, offset, length, endian):
         self.checkBounds(offset, length)
-        
+
         byteOffset = offset >> 3
         bitOffset = offset & 7
 
-        if (endian):
+        if endian:
             endian = ">"
         else:
             endian = "<"
-            
-        temp = self.data[byteOffset:byteOffset + (length >> 3)]
+
+        temp = self.data[byteOffset : byteOffset + (length >> 3)]
 
         if length == 8:
             return struct.unpack("B", temp)[0]
@@ -112,11 +116,11 @@ class Message:
         byteOffset = offset >> 3
         bitOffset = offset & 7
 
-        if (endian):
+        if endian:
             endian = ">"
         else:
             endian = "<"
-            
+
         if length == 8:
             temp = struct.pack(endian + "B", val)
         elif length == 16:
@@ -126,7 +130,9 @@ class Message:
         else:
             raise MessageException("Bad length")
 
-        self.data = self.data[:byteOffset] + temp + self.data[byteOffset + (length >> 3):]
+        self.data = (
+            self.data[:byteOffset] + temp + self.data[byteOffset + (length >> 3) :]
+        )
 
     def getSIntElement(self, offset, length, endian):
         self.checkBounds(offset, length)
@@ -134,12 +140,12 @@ class Message:
         byteOffset = offset >> 3
         bitOffset = offset & 7
 
-        if (endian):
+        if endian:
             endian = ">"
         else:
             endian = "<"
 
-        temp = self.data[byteOffset:byteOffset + (length >> 3)]
+        temp = self.data[byteOffset : byteOffset + (length >> 3)]
 
         if length == 8:
             return struct.unpack(endian + "b", temp)[0]
@@ -156,7 +162,7 @@ class Message:
         byteOffset = offset >> 3
         bitOffset = offset & 7
 
-        if (endian):
+        if endian:
             endian = ">"
         else:
             endian = "<"
@@ -170,7 +176,9 @@ class Message:
         else:
             raise MessageException("Bad length")
 
-        self.data = self.data[:byteOffset] + temp + self.data[byteOffset + (length >> 3):]
+        self.data = (
+            self.data[:byteOffset] + temp + self.data[byteOffset + (length >> 3) :]
+        )
 
     def getFloatElement(self, offset, length, endian):
         self.checkBounds(offset, length)
@@ -178,12 +186,12 @@ class Message:
         byteOffset = offset >> 3
         bitOffset = offset & 7
 
-        if (endian):
+        if endian:
             endian = ">"
         else:
             endian = "<"
 
-        temp = self.data[byteOffset:byteOffset + (length >> 3)]
+        temp = self.data[byteOffset : byteOffset + (length >> 3)]
 
         return struct.unpack(endian + "f", temp)[0]
 
@@ -193,11 +201,13 @@ class Message:
         byteOffset = offset >> 3
         bitOffset = offset & 7
 
-        if (endian):
+        if endian:
             endian = ">"
         else:
             endian = "<"
 
         temp = struct.pack(endian + "f", value)
 
-        self.data = self.data[:byteOffset] + temp + self.data[byteOffset + (length >> 3):]
+        self.data = (
+            self.data[:byteOffset] + temp + self.data[byteOffset + (length >> 3) :]
+        )

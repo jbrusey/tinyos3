@@ -38,11 +38,11 @@ from .IO import IODone
 from .Serial import Serial
 
 SYNC_BYTE = Serial.HDLC_FLAG_BYTE
-ESCAPE_BYTE = Serial.HDLC_CTLESC_BYTE 
+ESCAPE_BYTE = Serial.HDLC_CTLESC_BYTE
 MTU = 256
 
 P_ACK = Serial.SERIAL_PROTO_ACK
-P_PACKET_ACK = Serial.SERIAL_PROTO_PACKET_ACK 
+P_PACKET_ACK = Serial.SERIAL_PROTO_PACKET_ACK
 P_PACKET_NO_ACK = Serial.SERIAL_PROTO_PACKET_NOACK
 P_UNKNOWN = Serial.SERIAL_PROTO_PACKET_UNKNOWN
 
@@ -52,6 +52,7 @@ TX_ATTEMPT_LIMIT = 1
 
 class NoAckException(Exception):
     pass
+
 
 def hex(x):
     return "0x%02X" % (ord(x))
@@ -65,7 +66,7 @@ class RXThread(Thread):
     def run(self):
         while True:
             try:
-                frame = self.prot.readFramedPacket()       
+                frame = self.prot.readFramedPacket()
                 frameType = ord(frame[0])
                 pdataOffset = 1
                 if frameType == P_PACKET_ACK:
@@ -73,7 +74,7 @@ class RXThread(Thread):
                     self.prot.writeFramedPacket(P_ACK, frame[1], "", 0)
                     pdataOffset = 2
                 packet = frame[pdataOffset:]
-                
+
                 if frameType == P_ACK:
                     with self.prot.ackCV:
                         if self.prot.lastAck:
@@ -85,7 +86,7 @@ class RXThread(Thread):
                     with self.prot.dataCV:
                         self.prot.lastData = packet
                         self.prot.dataCV.notify()
-            #OK, kind of ugly. finishing the SerialSource (ThreadTask)
+            # OK, kind of ugly. finishing the SerialSource (ThreadTask)
             # leads (ultimately) to an IODone exception coming up
             # through here. At this point, the thread should complete.
             except IODone:
@@ -96,6 +97,7 @@ class RXThread(Thread):
                     self.prot.lastData = None
                     self.prot.dataCV.notify()
                 break
+
 
 class SerialProtocol:
     def __init__(self, ins, outs):
@@ -115,14 +117,14 @@ class SerialProtocol:
         self.ackCV = Condition(rxLock)
         self.lastData = None
         self.lastAck = None
-    
-    #also a little ugly: can't start this thread until the
+
+    # also a little ugly: can't start this thread until the
     # serial.Serial object has been opened. This should all be
     # encapsulated in a single constructor.
     def open(self):
         self.rxThread = RXThread(self)
         self.rxThread.start()
-        
+
     def readPacket(self):
         with self.dataCV:
             self.dataCV.wait()
@@ -136,7 +138,7 @@ class SerialProtocol:
         while True:
             if not self.inSync:
                 if DEBUG:
-                    print("resynchronizing...", end=' ')
+                    print("resynchronizing...", end=" ")
 
                 while self.ins.read(1) != chr(SYNC_BYTE):
                     self.outs.write(chr(SYNC_BYTE))
@@ -167,9 +169,9 @@ class SerialProtocol:
                     continue
 
                 b ^= 0x20
-                escaped = False;
+                escaped = False
             elif b == ESCAPE_BYTE:
-                escaped = True;
+                escaped = True
                 continue
             elif b == SYNC_BYTE:
                 if count < 4:
@@ -177,9 +179,10 @@ class SerialProtocol:
                     count = 0
                     continue
 
-                packet = receiveBuffer[0:count - 2]
-                readCrc = ord(receiveBuffer[count - 2]) \
-                       | (ord(receiveBuffer[count - 1]) << 8);
+                packet = receiveBuffer[0 : count - 2]
+                readCrc = ord(receiveBuffer[count - 2]) | (
+                    ord(receiveBuffer[count - 1]) << 8
+                )
                 computedCrc = crc(packet)
 
                 if DEBUG:
@@ -201,14 +204,12 @@ class SerialProtocol:
             receiveBuffer += chr(b)
             count += 1
 
-
-
     def writePacket(self, data):
         if DEBUG:
             print("Writing packet:")
             print(" ".join(map(hex, data)))
         attemptsLeft = TX_ATTEMPT_LIMIT
-        self.seqNo = (self.seqNo + 1) %256
+        self.seqNo = (self.seqNo + 1) % 256
         while attemptsLeft:
             attemptsLeft -= 1
             try:
@@ -234,19 +235,18 @@ class SerialProtocol:
             crc = crcByte(crc, ord(c))
             frame += self.escape(c)
 
-        frame += self.escape(chr(crc & 0xff))
+        frame += self.escape(chr(crc & 0xFF))
         frame += self.escape(chr(crc >> 8))
 
         frame += chr(SYNC_BYTE)
         if DEBUG:
-            print("Framed Write: (%x) "%sn+" ".join(map(hex, frame)))
+            print("Framed Write: (%x) " % sn + " ".join(map(hex, frame)))
         self.outs.write(frame)
         with self.ackCV:
             self.ackCV.wait(0.25)
             if not self.lastAck or ord(self.lastAck[0]) != sn:
                 raise NoAckException("No serial ACK received")
             self.lastAck = None
-
 
     def escape(self, c):
         b = ord(c)
@@ -256,6 +256,7 @@ class SerialProtocol:
         else:
             return c
 
+
 def crc(data):
     crc = 0
 
@@ -264,14 +265,14 @@ def crc(data):
 
     return crc
 
+
 def crcByte(crc, b):
-    crc = crc ^ b << 8;
+    crc = crc ^ b << 8
 
     for i in range(0, 8):
         if (crc & 0x8000) == 0x8000:
             crc = crc << 1 ^ 0x1021
         else:
-          crc = crc << 1
+            crc = crc << 1
 
-    return crc & 0xffff;
-
+    return crc & 0xFFFF

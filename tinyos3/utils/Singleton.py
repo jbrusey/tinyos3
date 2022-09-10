@@ -1,6 +1,6 @@
 # Copyright (c) 2006-2007 Chad Metcalf <chad@5secondfuse.com>
 #
-# Permission is hereby granted, free of charge, to any person obtaining a 
+# Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
 # to deal in the Software without restriction, including without limitation
 # the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -10,7 +10,7 @@
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
 #
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -73,175 +73,189 @@ Not guaranteed to be fit for any particular purpose. Use at your
 own risk. 
 """
 
+
 class SingletonException(Exception):
     def __init__(self, *args):
         Exception.__init__(self)
         self.args = args
 
+
 class MetaSingleton(type):
     def __new__(metaclass, strName, tupBases, dict):
-        if '__new__' in dict:
-            raise SingletonException('Can not override __new__ in a Singleton')
-        return super(MetaSingleton,metaclass).__new__(metaclass, strName, tupBases, dict)
-        
+        if "__new__" in dict:
+            raise SingletonException("Can not override __new__ in a Singleton")
+        return super(MetaSingleton, metaclass).__new__(
+            metaclass, strName, tupBases, dict
+        )
+
     def __call__(cls, *lstArgs, **dictArgs):
-        raise SingletonException('Singletons may only be instantiated through getInstance()')
-        
+        raise SingletonException(
+            "Singletons may only be instantiated through getInstance()"
+        )
+
+
 class Singleton(object, metaclass=MetaSingleton):
     def getInstance(cls, *lstArgs):
         """
         Call this to instantiate an instance or retrieve the existing instance.
         If the singleton requires args to be instantiated, include them the first
-        time you call getInstance.        
+        time you call getInstance.
         """
         if cls._isInstantiated():
             if len(lstArgs) != 0:
-                raise SingletonException('If no supplied args, singleton must already be instantiated, or __init__ must require no args')
+                raise SingletonException(
+                    "If no supplied args, singleton must already be instantiated, or __init__ must require no args"
+                )
         else:
             if cls._getConstructionArgCountNotCountingSelf() > 0 and len(lstArgs) <= 0:
-                raise SingletonException('If the singleton requires __init__ args, supply them on first instantiation')
+                raise SingletonException(
+                    "If the singleton requires __init__ args, supply them on first instantiation"
+                )
             instance = cls.__new__(cls)
             instance.__init__(*lstArgs)
             cls.cInstance = instance
         return cls.cInstance
+
     getInstance = classmethod(getInstance)
-    
+
     def _isInstantiated(cls):
-        return hasattr(cls, 'cInstance')
-    _isInstantiated = classmethod(_isInstantiated)  
+        return hasattr(cls, "cInstance")
+
+    _isInstantiated = classmethod(_isInstantiated)
 
     def _getConstructionArgCountNotCountingSelf(cls):
         return cls.__init__.__func__.__code__.co_argcount - 1
-    _getConstructionArgCountNotCountingSelf = classmethod(_getConstructionArgCountNotCountingSelf)
+
+    _getConstructionArgCountNotCountingSelf = classmethod(
+        _getConstructionArgCountNotCountingSelf
+    )
 
     def _forgetClassInstanceReferenceForTesting(cls):
         """
-        This is designed for convenience in testing -- sometimes you 
+        This is designed for convenience in testing -- sometimes you
         want to get rid of a singleton during test code to see what
         happens when you call getInstance() under a new situation.
-        
+
         To really delete the object, all external references to it
         also need to be deleted.
         """
         try:
-            delattr(cls,'cInstance')
+            delattr(cls, "cInstance")
         except AttributeError:
             # run up the chain of base classes until we find the one that has the instance
             # and then delete it there
-            for baseClass in cls.__bases__: 
+            for baseClass in cls.__bases__:
                 if issubclass(baseClass, Singleton):
                     baseClass._forgetClassInstanceReferenceForTesting()
-    _forgetClassInstanceReferenceForTesting = classmethod(_forgetClassInstanceReferenceForTesting)
-    
+
+    _forgetClassInstanceReferenceForTesting = classmethod(
+        _forgetClassInstanceReferenceForTesting
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import unittest
-    
+
     class PublicInterfaceTest(unittest.TestCase):
         def testReturnsSameObject(self):
             """
             Demonstrates normal use -- just call getInstance and it returns a singleton instance
             """
-        
-            class A(Singleton): 
+
+            class A(Singleton):
                 def __init__(self):
                     super(A, self).__init__()
-                    
+
             a1 = A.getInstance()
             a2 = A.getInstance()
             self.assertEqual(id(a1), id(a2))
-            
+
         def testInstantiateWithMultiArgConstructor(self):
             """
             If the singleton needs args to construct, include them in the first
             call to get instances.
             """
-                    
-            class B(Singleton): 
-                    
+
+            class B(Singleton):
                 def __init__(self, arg1, arg2):
                     super(B, self).__init__()
                     self.arg1 = arg1
                     self.arg2 = arg2
 
-            b1 = B.getInstance('arg1 value', 'arg2 value')
+            b1 = B.getInstance("arg1 value", "arg2 value")
             b2 = B.getInstance()
-            self.assertEqual(b1.arg1, 'arg1 value')
-            self.assertEqual(b1.arg2, 'arg2 value')
+            self.assertEqual(b1.arg1, "arg1 value")
+            self.assertEqual(b1.arg2, "arg2 value")
             self.assertEqual(id(b1), id(b2))
-            
-            
+
         def testTryToInstantiateWithoutNeededArgs(self):
-            
-            class B(Singleton): 
-                    
+            class B(Singleton):
                 def __init__(self, arg1, arg2):
                     super(B, self).__init__()
                     self.arg1 = arg1
                     self.arg2 = arg2
 
             self.assertRaises(SingletonException, B.getInstance)
-            
+
         def testTryToInstantiateWithoutGetInstance(self):
             """
             Demonstrates that singletons can ONLY be instantiated through
             getInstance, as long as they call Singleton.__init__ during construction.
-            
+
             If this check is not required, you don't need to call Singleton.__init__().
             """
 
-            class A(Singleton): 
+            class A(Singleton):
                 def __init__(self):
                     super(A, self).__init__()
-                    
+
             self.assertRaises(SingletonException, A)
-            
+
         def testDontAllowNew(self):
-        
             def instantiatedAnIllegalClass():
-                class A(Singleton): 
+                class A(Singleton):
                     def __init__(self):
                         super(A, self).__init__()
-                        
+
                     def __new__(metaclass, strName, tupBases, dict):
-                        return super(MetaSingleton,metaclass).__new__(metaclass, strName, tupBases, dict)
-                                        
+                        return super(MetaSingleton, metaclass).__new__(
+                            metaclass, strName, tupBases, dict
+                        )
+
             self.assertRaises(SingletonException, instantiatedAnIllegalClass)
-        
-        
+
         def testDontAllowArgsAfterConstruction(self):
-            class B(Singleton): 
-                    
+            class B(Singleton):
                 def __init__(self, arg1, arg2):
                     super(B, self).__init__()
                     self.arg1 = arg1
                     self.arg2 = arg2
 
-            b1 = B.getInstance('arg1 value', 'arg2 value')
-            self.assertRaises(SingletonException, B, 'arg1 value', 'arg2 value')
-            
+            b1 = B.getInstance("arg1 value", "arg2 value")
+            self.assertRaises(SingletonException, B, "arg1 value", "arg2 value")
+
         def test_forgetClassInstanceReferenceForTesting(self):
-            class A(Singleton): 
+            class A(Singleton):
                 def __init__(self):
                     super(A, self).__init__()
-            class B(A): 
+
+            class B(A):
                 def __init__(self):
                     super(B, self).__init__()
-                    
+
             # check that changing the class after forgetting the instance produces
             # an instance of the new class
             a = A.getInstance()
-            assert a.__class__.__name__ == 'A'
+            assert a.__class__.__name__ == "A"
             A._forgetClassInstanceReferenceForTesting()
             b = B.getInstance()
-            assert b.__class__.__name__ == 'B'
-            
+            assert b.__class__.__name__ == "B"
+
             # check that invoking the 'forget' on a subclass still deletes the instance
             B._forgetClassInstanceReferenceForTesting()
             a = A.getInstance()
             B._forgetClassInstanceReferenceForTesting()
             b = B.getInstance()
-            assert b.__class__.__name__ == 'B'
+            assert b.__class__.__name__ == "B"
 
     unittest.main()

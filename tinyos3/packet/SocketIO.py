@@ -32,6 +32,7 @@ import socket
 
 from .IO import *
 
+
 class SocketIO(IO):
     def __init__(self, host, port):
         IO.__init__(self)
@@ -42,9 +43,7 @@ class SocketIO(IO):
         self.port = port
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.setsockopt(socket.IPPROTO_TCP,
-                               socket.TCP_NODELAY,
-                               1)
+        self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         self.socket.settimeout(1)
         self.socket.bind(("", 0))
 
@@ -52,7 +51,7 @@ class SocketIO(IO):
         self.done = True
 
     def open(self):
-        print("SocketIO: Connecting socket to "+str(self.host)+":"+str(self.port))
+        print("SocketIO: Connecting socket to " + str(self.host) + ":" + str(self.port))
         self.socket.connect((self.host, self.port))
         self.socket.settimeout(1)
 

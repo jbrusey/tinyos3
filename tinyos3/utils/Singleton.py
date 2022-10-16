@@ -95,6 +95,7 @@ class MetaSingleton(type):
 
 
 class Singleton(object, metaclass=MetaSingleton):
+    @classmethod
     def getInstance(cls, *lstArgs):
         """
         Call this to instantiate an instance or retrieve the existing instance.
@@ -116,20 +117,19 @@ class Singleton(object, metaclass=MetaSingleton):
             cls.cInstance = instance
         return cls.cInstance
 
-    getInstance = classmethod(getInstance)
-
+    @classmethod
     def _isInstantiated(cls):
         return hasattr(cls, "cInstance")
 
-    _isInstantiated = classmethod(_isInstantiated)
-
+    @classmethod
     def _getConstructionArgCountNotCountingSelf(cls):
-        return cls.__init__.__func__.__code__.co_argcount - 1
+        import inspect
 
-    _getConstructionArgCountNotCountingSelf = classmethod(
-        _getConstructionArgCountNotCountingSelf
-    )
+        assert inspect.isclass(cls)
+        print(cls.__init__)
+        return cls.__init__.__code__.co_argcount - 1
 
+    @classmethod
     def _forgetClassInstanceReferenceForTesting(cls):
         """
         This is designed for convenience in testing -- sometimes you
@@ -147,10 +147,6 @@ class Singleton(object, metaclass=MetaSingleton):
             for baseClass in cls.__bases__:
                 if issubclass(baseClass, Singleton):
                     baseClass._forgetClassInstanceReferenceForTesting()
-
-    _forgetClassInstanceReferenceForTesting = classmethod(
-        _forgetClassInstanceReferenceForTesting
-    )
 
 
 if __name__ == "__main__":

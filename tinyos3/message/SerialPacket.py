@@ -427,7 +427,7 @@ class SerialPacket(tinyos3.message.Message.Message):
             0,
         ]
         if dimension < 0 or dimension >= 1:
-            raise IndexException
+            raise IndexError
         if array_dims[dimension] == 0:
             raise IndexError
         return array_dims[dimension]

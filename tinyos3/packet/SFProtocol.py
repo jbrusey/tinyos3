@@ -48,8 +48,8 @@ class SFProtocol:
     def open(self):
         self.outs.write(VERSION + SUBVERSION)
         partner = self.ins.read(2)
-        if partner[0] != VERSION:
-            print("SFProtocol : version error")
+        if partner[0] != VERSION[0]:
+            print(f"SFProtocol : version error {partner[0]} != {VERSION[0]}")
             raise SFProtocolException("protocol version error")
 
         # Actual version is min received vs our version

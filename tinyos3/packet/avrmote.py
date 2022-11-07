@@ -107,7 +107,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the offset (in bytes) of the field 'addr'
     #
     def offset_addr(self):
-        return 0 / 8
+        return 0 // 8
 
     #
     # Return the offset (in bits) of the field 'addr'
@@ -131,7 +131,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the size, in bytes, of the field 'addr'
     #
     def size_addr(self):
-        return 16 / 8
+        return 16 // 8
 
     #
     # Return the size, in bits, of the field 'addr'
@@ -162,7 +162,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the offset (in bytes) of the field 'type'
     #
     def offset_type(self):
-        return 16 / 8
+        return 16 // 8
 
     #
     # Return the offset (in bits) of the field 'type'
@@ -186,7 +186,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the size, in bytes, of the field 'type'
     #
     def size_type(self):
-        return 8 / 8
+        return 8 // 8
 
     #
     # Return the size, in bits, of the field 'type'
@@ -217,7 +217,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the offset (in bytes) of the field 'group'
     #
     def offset_group(self):
-        return 24 / 8
+        return 24 // 8
 
     #
     # Return the offset (in bits) of the field 'group'
@@ -241,7 +241,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the size, in bytes, of the field 'group'
     #
     def size_group(self):
-        return 8 / 8
+        return 8 // 8
 
     #
     # Return the size, in bits, of the field 'group'
@@ -272,7 +272,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the offset (in bytes) of the field 'length'
     #
     def offset_length(self):
-        return 32 / 8
+        return 32 // 8
 
     #
     # Return the offset (in bits) of the field 'length'
@@ -296,7 +296,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the size, in bytes, of the field 'length'
     #
     def size_length(self):
-        return 8 / 8
+        return 8 // 8
 
     #
     # Return the size, in bits, of the field 'length'
@@ -331,7 +331,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
         if index1 < 0 or index1 >= 29:
             raise IndexError
         offset += 0 + index1 * 8
-        return offset / 8
+        return offset // 8
 
     #
     # Return the offset (in bits) of the field 'data'
@@ -375,7 +375,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the total size, in bytes, of the array 'data'
     #
     def totalSize_data(self):
-        return 232 / 8
+        return 232 // 8
 
     #
     # Return the total size, in bits, of the array 'data'
@@ -387,7 +387,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the size, in bytes, of each element of the array 'data'
     #
     def elementSize_data(self):
-        return 8 / 8
+        return 8 // 8
 
     #
     # Return the size, in bits, of each element of the array 'data'
@@ -464,7 +464,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the offset (in bytes) of the field 'crc'
     #
     def offset_crc(self):
-        return 272 / 8
+        return 272 // 8
 
     #
     # Return the offset (in bits) of the field 'crc'
@@ -488,7 +488,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the size, in bytes, of the field 'crc'
     #
     def size_crc(self):
-        return 16 / 8
+        return 16 // 8
 
     #
     # Return the size, in bits, of the field 'crc'
@@ -519,7 +519,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the offset (in bytes) of the field 'strength'
     #
     def offset_strength(self):
-        return 288 / 8
+        return 288 // 8
 
     #
     # Return the offset (in bits) of the field 'strength'
@@ -543,7 +543,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the size, in bytes, of the field 'strength'
     #
     def size_strength(self):
-        return 16 / 8
+        return 16 // 8
 
     #
     # Return the size, in bits, of the field 'strength'
@@ -574,7 +574,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the offset (in bytes) of the field 'ack'
     #
     def offset_ack(self):
-        return 304 / 8
+        return 304 // 8
 
     #
     # Return the offset (in bits) of the field 'ack'
@@ -598,7 +598,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the size, in bytes, of the field 'ack'
     #
     def size_ack(self):
-        return 8 / 8
+        return 8 // 8
 
     #
     # Return the size, in bits, of the field 'ack'
@@ -629,7 +629,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the offset (in bytes) of the field 'time'
     #
     def offset_time(self):
-        return 312 / 8
+        return 312 // 8
 
     #
     # Return the offset (in bits) of the field 'time'
@@ -653,7 +653,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the size, in bytes, of the field 'time'
     #
     def size_time(self):
-        return 16 / 8
+        return 16 // 8
 
     #
     # Return the size, in bits, of the field 'time'
@@ -684,7 +684,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the offset (in bytes) of the field 'sendSecurityMode'
     #
     def offset_sendSecurityMode(self):
-        return 328 / 8
+        return 328 // 8
 
     #
     # Return the offset (in bits) of the field 'sendSecurityMode'
@@ -708,7 +708,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the size, in bytes, of the field 'sendSecurityMode'
     #
     def size_sendSecurityMode(self):
-        return 8 / 8
+        return 8 // 8
 
     #
     # Return the size, in bits, of the field 'sendSecurityMode'
@@ -739,7 +739,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the offset (in bytes) of the field 'receiveSecurityMode'
     #
     def offset_receiveSecurityMode(self):
-        return 336 / 8
+        return 336 // 8
 
     #
     # Return the offset (in bits) of the field 'receiveSecurityMode'
@@ -763,7 +763,7 @@ class TOS_Msg(tinyos3.message.Message.Message):
     # Return the size, in bytes, of the field 'receiveSecurityMode'
     #
     def size_receiveSecurityMode(self):
-        return 8 / 8
+        return 8 // 8
 
     #
     # Return the size, in bits, of the field 'receiveSecurityMode'

@@ -99,9 +99,10 @@ class PacketSource(ThreadTask):
                 try:
                     if DEBUG:
                         print("About to run packet dispatcher!")
-                        for i in packet:
-                            print(ord(i), " ", end=" ")
-                        print()
+                        print(f"packet={packet}")
+                        # for i in packet:
+                        #     print(i, " ", end=" ")
+                        # print()
 
                     self.dispatcher.dispatchPacket(self, packet)
                 except Exception as x:

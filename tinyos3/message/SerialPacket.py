@@ -84,7 +84,7 @@ class SerialPacket(tinyos3.message.Message.Message):
     # Return the offset (in bytes) of the field 'header.dest'
     #
     def offset_header_dest(self):
-        return 0 / 8
+        return 0 // 8
 
     #
     # Return the offset (in bits) of the field 'header.dest'
@@ -108,7 +108,7 @@ class SerialPacket(tinyos3.message.Message.Message):
     # Return the size, in bytes, of the field 'header.dest'
     #
     def size_header_dest(self):
-        return 16 / 8
+        return 16 // 8
 
     #
     # Return the size, in bits, of the field 'header.dest'
@@ -139,7 +139,7 @@ class SerialPacket(tinyos3.message.Message.Message):
     # Return the offset (in bytes) of the field 'header.src'
     #
     def offset_header_src(self):
-        return 16 / 8
+        return 16 // 8
 
     #
     # Return the offset (in bits) of the field 'header.src'
@@ -163,7 +163,7 @@ class SerialPacket(tinyos3.message.Message.Message):
     # Return the size, in bytes, of the field 'header.src'
     #
     def size_header_src(self):
-        return 16 / 8
+        return 16 // 8
 
     #
     # Return the size, in bits, of the field 'header.src'
@@ -194,7 +194,7 @@ class SerialPacket(tinyos3.message.Message.Message):
     # Return the offset (in bytes) of the field 'header.length'
     #
     def offset_header_length(self):
-        return 32 / 8
+        return 32 // 8
 
     #
     # Return the offset (in bits) of the field 'header.length'
@@ -218,7 +218,7 @@ class SerialPacket(tinyos3.message.Message.Message):
     # Return the size, in bytes, of the field 'header.length'
     #
     def size_header_length(self):
-        return 8 / 8
+        return 8 // 8
 
     #
     # Return the size, in bits, of the field 'header.length'
@@ -249,7 +249,7 @@ class SerialPacket(tinyos3.message.Message.Message):
     # Return the offset (in bytes) of the field 'header.group'
     #
     def offset_header_group(self):
-        return 40 / 8
+        return 40 // 8
 
     #
     # Return the offset (in bits) of the field 'header.group'
@@ -273,7 +273,7 @@ class SerialPacket(tinyos3.message.Message.Message):
     # Return the size, in bytes, of the field 'header.group'
     #
     def size_header_group(self):
-        return 8 / 8
+        return 8 // 8
 
     #
     # Return the size, in bits, of the field 'header.group'
@@ -304,7 +304,7 @@ class SerialPacket(tinyos3.message.Message.Message):
     # Return the offset (in bytes) of the field 'header.type'
     #
     def offset_header_type(self):
-        return 48 / 8
+        return 48 // 8
 
     #
     # Return the offset (in bits) of the field 'header.type'
@@ -328,7 +328,7 @@ class SerialPacket(tinyos3.message.Message.Message):
     # Return the size, in bytes, of the field 'header.type'
     #
     def size_header_type(self):
-        return 8 / 8
+        return 8 // 8
 
     #
     # Return the size, in bits, of the field 'header.type'
@@ -358,12 +358,12 @@ class SerialPacket(tinyos3.message.Message.Message):
     #
     # Return the offset (in bytes) of the field 'data'
     #
-    def offset_data(self, index1):
+    def offset_data(self, index1: int) -> int:
         offset = 56
         if index1 < 0:
             raise IndexError
         offset += 0 + index1 * 8
-        return offset / 8
+        return offset // 8
 
     #
     # Return the offset (in bits) of the field 'data'
@@ -404,7 +404,7 @@ class SerialPacket(tinyos3.message.Message.Message):
     # Return the size, in bytes, of each element of the array 'data'
     #
     def elementSize_data(self):
-        return 8 / 8
+        return 8 // 8
 
     #
     # Return the size, in bits, of each element of the array 'data'

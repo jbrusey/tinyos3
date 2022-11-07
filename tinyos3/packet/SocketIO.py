@@ -29,6 +29,7 @@
 # Author: Geoffrey Mainland <mainland@eecs.harvard.edu>
 #
 import socket
+import sys
 
 from .IO import *
 
@@ -66,14 +67,16 @@ class SocketIO(IO):
                 raise IODone()
 
             try:
-                data += self.socket.recv(count - len(data))
-            except:
+                data += self.socket.recv(count - len(data)).decode()
+            except socket.timeout:
                 pass
+            except Exception as x:
+                print(f"SocketIO Exception in read: {repr(x)}", file=sys.stderr)
 
         return data
 
     def write(self, data):
-        return self.socket.send(data)
+        return self.socket.send(data.encode())
 
     def flush(self):
         pass

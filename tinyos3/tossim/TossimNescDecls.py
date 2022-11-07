@@ -674,7 +674,7 @@ class nescStruct(object):
             trueSize = 0
         else:
             a, b, lastField = self._findLastNestedField()
-            trueSize = (lastField["bitOffset"] + lastField["bitSize"]) / 8
+            trueSize = (lastField["bitOffset"] + lastField["bitSize"]) // 8
         return trueSize
 
     def _findLastNestedField(self):
@@ -774,7 +774,7 @@ class TosMsg(nescStruct):
                 lastFieldSize = lastField.elementType.size
                 numExtraBytes = len(bytes) - self.size  # trueSize()
                 if numExtraBytes % lastFieldSize == 0:
-                    requiredArraySize = int(numExtraBytes / lastFieldSize)
+                    requiredArraySize = int(numExtraBytes // lastFieldSize)
                     lastField = nescArray(requiredArraySize, lastField.elementType)
                 # print "new size is %d" % numExtraBytes
                 # and set it, changing the size of all parent structs

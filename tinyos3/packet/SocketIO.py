@@ -61,13 +61,13 @@ class SocketIO(IO):
         self.socket = None
 
     def read(self, count):
-        data = ""
+        data = b""
         while count - len(data) > 0:
             if self.isDone():
                 raise IODone()
 
             try:
-                data += self.socket.recv(count - len(data)).decode()
+                data += self.socket.recv(count - len(data))
             except socket.timeout:
                 pass
             except Exception as x:
@@ -76,7 +76,7 @@ class SocketIO(IO):
         return data
 
     def write(self, data):
-        return self.socket.send(data.encode())
+        return self.socket.send(data)
 
     def flush(self):
         pass

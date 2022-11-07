@@ -38,7 +38,9 @@ from .IO import IODone
 from .Serial import Serial
 
 SYNC_BYTE = Serial.HDLC_FLAG_BYTE
+B_SYNC_BYTE = (SYNC_BYTE).to_bytes(1, byteorder="big")
 ESCAPE_BYTE = Serial.HDLC_CTLESC_BYTE
+B_ESCAPE_BYTE = (ESCAPE_BYTE).to_bytes(1, byteorder="big")
 MTU = 256
 
 P_ACK = Serial.SERIAL_PROTO_ACK
@@ -54,8 +56,8 @@ class NoAckException(Exception):
     pass
 
 
-def hex(x):
-    return "0x%02X" % (ord(x))
+def hex(x: int):
+    return f"0x{x:02X}"
 
 
 class RXThread(Thread):
@@ -71,7 +73,7 @@ class RXThread(Thread):
                 pdataOffset = 1
                 if frameType == P_PACKET_ACK:
                     # send an ACK
-                    self.prot.writeFramedPacket(P_ACK, frame[1], "", 0)
+                    self.prot.writeFramedPacket(P_ACK, frame[1], b"", 0)
                     pdataOffset = 2
                 packet = frame[pdataOffset:]
 
@@ -107,7 +109,7 @@ class SerialProtocol:
         self.inSync = False
         self.seqNo = 0
 
-        self.receiveBuffer = chr(0) * MTU
+        self.receiveBuffer = bytes(MTU)
 
         self.received = [None] * 256
         self.received[P_ACK] = []
@@ -130,7 +132,7 @@ class SerialProtocol:
             self.dataCV.wait()
             return self.lastData
 
-    def readFramedPacket(self):
+    def readFramedPacket(self) -> bytes:
         count = 0
         escaped = False
         receiveBuffer = ""
@@ -140,9 +142,9 @@ class SerialProtocol:
                 if DEBUG:
                     print("resynchronizing...", end=" ")
 
-                while self.ins.read(1) != chr(SYNC_BYTE):
-                    self.outs.write(chr(SYNC_BYTE))
-                    self.outs.write(chr(SYNC_BYTE))
+                while self.ins.read(1) != B_SYNC_BYTE:
+                    self.outs.write(B_SYNC_BYTE)
+                    self.outs.write(B_SYNC_BYTE)
                 if DEBUG:
                     print("synchronized")
 
@@ -158,7 +160,7 @@ class SerialProtocol:
                 self.inSync = False
                 continue
 
-            b = ord(self.ins.read(1))
+            b = self.ins.read(1)[0]
 
             if escaped:
                 if b == SYNC_BYTE:
@@ -180,9 +182,7 @@ class SerialProtocol:
                     continue
 
                 packet = receiveBuffer[0 : count - 2]
-                readCrc = ord(receiveBuffer[count - 2]) | (
-                    ord(receiveBuffer[count - 1]) << 8
-                )
+                readCrc = receiveBuffer[count - 2] | (receiveBuffer[count - 1] << 8)
                 computedCrc = crc(packet)
 
                 if DEBUG:
@@ -201,10 +201,10 @@ class SerialProtocol:
                     receiveBuffer = ""
                     continue
 
-            receiveBuffer += chr(b)
+            receiveBuffer += (b).to_bytes(1, byteorder="big")
             count += 1
 
-    def writePacket(self, data):
+    def writePacket(self, data: bytes) -> None:
         if DEBUG:
             print("Writing packet:")
             print(" ".join(map(hex, data)))
@@ -219,54 +219,52 @@ class SerialProtocol:
                 if DEBUG:
                     print("NO ACK:", self.seqNo)
 
-    def writeFramedPacket(self, frameType, sn, data):
+    def writeFramedPacket(self, frameType: int, sn: int, data: bytes) -> None:
         crc = 0
-        frame = ""
+        frame = b""
 
-        frame += chr(SYNC_BYTE)
+        frame += B_SYNC_BYTE
 
         crc = crcByte(crc, frameType)
-        frame += self.escape(chr(frameType))
+        frame += self.escape(frameType)
 
         crc = crcByte(crc, sn)
-        frame += self.escape(chr(sn))
+        frame += self.escape(sn)
 
         for c in data:
-            crc = crcByte(crc, ord(c))
+            crc = crcByte(crc, c)
             frame += self.escape(c)
 
-        frame += self.escape(chr(crc & 0xFF))
-        frame += self.escape(chr(crc >> 8))
+        frame += self.escape(crc & 0xFF)
+        frame += self.escape(crc >> 8)
 
-        frame += chr(SYNC_BYTE)
+        frame += B_SYNC_BYTE
         if DEBUG:
             print("Framed Write: (%x) " % sn + " ".join(map(hex, frame)))
         self.outs.write(frame)
         with self.ackCV:
             self.ackCV.wait(0.25)
-            if not self.lastAck or ord(self.lastAck[0]) != sn:
+            if not self.lastAck or self.lastAck[0] != sn:
                 raise NoAckException("No serial ACK received")
             self.lastAck = None
 
-    def escape(self, c):
-        b = ord(c)
-
+    def escape(self, b: int) -> bytes:
         if b == SYNC_BYTE or b == ESCAPE_BYTE:
-            return chr(ESCAPE_BYTE) + chr(b ^ 0x20)
+            return B_ESCAPE_BYTE + (b ^ 0x20).to_bytes(1, byteorder="big")
         else:
-            return c
+            return (b).to_bytes(1, byteorder="big")
 
 
-def crc(data):
+def crc(data: bytes) -> int:
     crc = 0
 
     for b in data:
-        crc = crcByte(crc, ord(b))
+        crc = crcByte(crc, b)
 
     return crc
 
 
-def crcByte(crc, b):
+def crcByte(crc: int, b: int) -> int:
     crc = crc ^ b << 8
 
     for i in range(0, 8):

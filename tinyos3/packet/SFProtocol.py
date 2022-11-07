@@ -28,8 +28,8 @@
 #
 # Author: Geoffrey Mainland <mainland@eecs.harvard.edu>
 #
-VERSION = "U"
-SUBVERSION = " "
+VERSION = b"U"
+SUBVERSION = b" "
 
 PLATFORM_UNKNOWN = 0
 

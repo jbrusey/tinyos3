@@ -66,8 +66,4 @@ class Watcher(Singleton):
         sys.exit()
 
     def kill(self):
-        try:
-            os.kill(self.child, signal.SIGKILL)
-        except OSError as x:
-            print("os.kill failed")
-            print(x)
+        os.kill(self.child, signal.SIGKILL)

@@ -77,55 +77,39 @@ class MoteIF:
         #             for i in packet:
         #                 print ord(i)," ",
         #             print
-        try:
-            # Message.py ignores base_offset, so we'll just chop off
-            # the first byte (the SERIAL_AMTYPE) here.
-            serial_pkt = SerialPacket(packet[1:], data_length=len(packet) - 1)
-        except:
-            traceback.print_exc()
+        # Message.py ignores base_offset, so we'll just chop off
+        # the first byte (the SERIAL_AMTYPE) here.
+        serial_pkt = SerialPacket(packet[1:], data_length=len(packet) - 1)
 
-        try:
-            data_start = serial_pkt.offset_data(0) + 1
-            data_end = data_start + serial_pkt.get_header_length()
-            data = packet[data_start:data_end]
-            amType = serial_pkt.get_header_type()
-
-        except Exception as x:
-            print(x, file=sys.stderr)
-            print(traceback.print_tb(sys.exc_info()[2]), file=sys.stderr)
+        data_start = serial_pkt.offset_data(0) + 1
+        data_end = data_start + serial_pkt.get_header_length()
+        data = packet[data_start:data_end]
+        amType = serial_pkt.get_header_type()
 
         for l in self.listeners:
             amTypes = self.listeners[l]
             if amType in amTypes:
-                try:
-                    msgClass = amTypes[amType]
-                    msg = msgClass(
-                        data=data,
-                        data_length=len(data),
-                        addr=serial_pkt.get_header_src(),
-                        gid=serial_pkt.get_header_group(),
-                    )
-                    l.receive(source, msg)
-                except Exception as x:
-                    print(x, file=sys.stderr)
-                    print(traceback.print_tb(sys.exc_info()[2]), file=sys.stderr)
+                msgClass = amTypes[amType]
+                msg = msgClass(
+                    data=data,
+                    data_length=len(data),
+                    addr=serial_pkt.get_header_src(),
+                    gid=serial_pkt.get_header_group(),
+                )
+                l.receive(source, msg)
 
     def sendMsg(self, dest, addr, amType, group, msg):
-        try:
-            payload = msg.dataGet()
-            serial_pkt = SerialPacket(None)
-            serial_pkt.set_header_dest(int(addr))
-            serial_pkt.set_header_group(int(group))
-            serial_pkt.set_header_type(int(amType))
-            serial_pkt.set_header_length(len(payload))
+        payload = msg.dataGet()
+        serial_pkt = SerialPacket(None)
+        serial_pkt.set_header_dest(int(addr))
+        serial_pkt.set_header_group(int(group))
+        serial_pkt.set_header_type(int(amType))
+        serial_pkt.set_header_length(len(payload))
 
-            header = serial_pkt.dataGet()[0 : serial_pkt.offset_data(0)]
-            data = bytes([Serial.TOS_SERIAL_ACTIVE_MESSAGE_ID]) + header + payload
+        header = serial_pkt.dataGet()[0 : serial_pkt.offset_data(0)]
+        data = bytes([Serial.TOS_SERIAL_ACTIVE_MESSAGE_ID]) + header + payload
 
-            dest.writePacket(data)
-        except Exception as x:
-            print(x, file=sys.stderr)
-            print(traceback.print_tb(sys.exc_info()[2]), file=sys.stderr)
+        dest.writePacket(data)
 
     def addSource(self, name=None):
         if name == None:

@@ -64,16 +64,6 @@ class PacketSource(ThreadTask):
     def __call__(self):
         try:
             self.open()
-        except Exception as x:
-            if DEBUG:
-                print("Exception while opening packet source:")
-                print(x)
-                print(traceback.print_tb(sys.exc_info()[2]))
-            self.done = True
-        except:
-            if DEBUG:
-                print("Unknown exception while opening packet source")
-            self.done = True
         finally:
             self.semaphore.release()
 
@@ -84,42 +74,18 @@ class PacketSource(ThreadTask):
                 if DEBUG:
                     print("IO finished")
                 break
-            except Exception as x:
-                if DEBUG:
-                    print("IO exception:")
-                    print(x)
-                    print(traceback.print_tb(sys.exc_info()[2]))
-                break
-            except:
-                if DEBUG:
-                    print("Unknown IO exception")
-                break
 
             if packet:
-                try:
-                    if DEBUG:
-                        print("About to run packet dispatcher!")
-                        print(f"packet={packet}")
-                        # for i in packet:
-                        #     print(i, " ", end=" ")
-                        # print()
+                if DEBUG:
+                    print("About to run packet dispatcher!")
+                    print(f"packet={packet}")
+                    # for i in packet:
+                    #     print(i, " ", end=" ")
+                    # print()
 
-                    self.dispatcher.dispatchPacket(self, packet)
-                except Exception as x:
-                    if DEBUG:
-                        print("Exception when dispatching packet:")
-                        print(x)
-                        print(traceback.print_tb(sys.exc_info()[2]))
-                #                    break
-                except:
-                    if DEBUG:
-                        print("Unknown exception when dispatching packet")
-        #                    break
+                self.dispatcher.dispatchPacket(self, packet)
 
-        try:
-            self.close()
-        except:
-            pass
+        self.close()
 
         self.finish()
 

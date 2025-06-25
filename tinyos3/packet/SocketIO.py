@@ -70,8 +70,6 @@ class SocketIO(IO):
                 data += self.socket.recv(count - len(data))
             except socket.timeout:
                 pass
-            except Exception as x:
-                print(f"SocketIO Exception in read: {repr(x)}", file=sys.stderr)
 
         return data
 

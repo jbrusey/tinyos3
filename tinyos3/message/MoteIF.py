@@ -113,16 +113,14 @@ class MoteIF:
     def sendMsg(self, dest, addr, amType, group, msg):
         try:
             payload = msg.dataGet()
-            msg = SerialPacket(None)
-            msg.set_header_dest(int(addr))
-            msg.set_header_group(int(group))
-            msg.set_header_type(int(amType))
-            msg.set_header_length(len(payload))
+            serial_pkt = SerialPacket(None)
+            serial_pkt.set_header_dest(int(addr))
+            serial_pkt.set_header_group(int(group))
+            serial_pkt.set_header_type(int(amType))
+            serial_pkt.set_header_length(len(payload))
 
-            # from tinyos3.packet.Serial
-            data = chr(Serial.TOS_SERIAL_ACTIVE_MESSAGE_ID)
-            data += msg.dataGet()[0 : msg.offset_data(0)]
-            data += payload
+            header = serial_pkt.dataGet()[0 : serial_pkt.offset_data(0)]
+            data = bytes([Serial.TOS_SERIAL_ACTIVE_MESSAGE_ID]) + header + payload
 
             dest.writePacket(data)
         except Exception as x:

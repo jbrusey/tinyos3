@@ -84,15 +84,17 @@ class MoteIF:
         except:
             traceback.print_exc()
 
-        try:
-            data_start = serial_pkt.offset_data(0) + 1
-            data_end = data_start + serial_pkt.get_header_length()
-            data = packet[data_start:data_end]
-            amType = serial_pkt.get_header_type()
-
-        except Exception as x:
-            print(x, file=sys.stderr)
-            print(traceback.print_tb(sys.exc_info()[2]), file=sys.stderr)
+        #        try:
+        data_start = serial_pkt.offset_data(0) + 1
+        data_end = data_start + serial_pkt.get_header_length()
+        assert type(data_start) == int
+        assert type(data_end) == int
+        data = packet[data_start:data_end]
+        amType = serial_pkt.get_header_type()
+        print(f"moteif received amType={amType}")
+        # except Exception as x:
+        #     print(x, file=sys.stderr)
+        #     print(traceback.print_tb(sys.exc_info()[2]), file=sys.stderr)
 
         for l in self.listeners:
             amTypes = self.listeners[l]
@@ -111,23 +113,24 @@ class MoteIF:
                     print(traceback.print_tb(sys.exc_info()[2]), file=sys.stderr)
 
     def sendMsg(self, dest, addr, amType, group, msg):
-        try:
-            payload = msg.dataGet()
-            msg = SerialPacket(None)
-            msg.set_header_dest(int(addr))
-            msg.set_header_group(int(group))
-            msg.set_header_type(int(amType))
-            msg.set_header_length(len(payload))
+        # try:
+        payload = msg.dataGet()
+        msg = SerialPacket(None)
+        msg.set_header_dest(int(addr))
+        msg.set_header_group(int(group))
+        msg.set_header_type(int(amType))
+        msg.set_header_length(len(payload))
 
-            # from tinyos3.packet.Serial
-            data = chr(Serial.TOS_SERIAL_ACTIVE_MESSAGE_ID)
-            data += msg.dataGet()[0 : msg.offset_data(0)]
-            data += payload
+        # from tinyos3.packet.Serial
+        # jb 25/6/2025 make byte string not str
+        data = bytes([Serial.TOS_SERIAL_ACTIVE_MESSAGE_ID])
+        data += msg.dataGet()[0 : msg.offset_data(0)]
+        data += payload
 
-            dest.writePacket(data)
-        except Exception as x:
-            print(x, file=sys.stderr)
-            print(traceback.print_tb(sys.exc_info()[2]), file=sys.stderr)
+        dest.writePacket(data)
+        # except Exception as x:
+        #     print(x, file=sys.stderr)
+        #     print(traceback.print_tb(sys.exc_info()[2]), file=sys.stderr)
 
     def addSource(self, name=None):
         if name == None:

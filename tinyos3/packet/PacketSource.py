@@ -28,6 +28,7 @@
 #
 # Author: Geoffrey Mainland <mainland@eecs.harvard.edu>
 #
+import logging
 import signal
 import sys
 import traceback
@@ -36,7 +37,7 @@ from .IO import *
 from .ThreadTask import *
 from threading import Semaphore
 
-DEBUG = False
+logger = logging.getLogger(__name__)
 
 runner = ThreadTaskRunner()
 
@@ -71,17 +72,15 @@ class PacketSource(ThreadTask):
             try:
                 packet = self.readPacket()
             except IODone:
-                if DEBUG:
-                    print("IO finished")
+                logger.debug("IO finished")
                 break
 
             if packet:
-                if DEBUG:
-                    print("About to run packet dispatcher!")
-                    print(f"packet={packet}")
-                    # for i in packet:
-                    #     print(i, " ", end=" ")
-                    # print()
+                logger.debug("About to run packet dispatcher!")
+                logger.debug("packet=%s", packet)
+                # for i in packet:
+                #     print(i, " ", end=" ")
+                # print()
 
                 self.dispatcher.dispatchPacket(self, packet)
 

@@ -29,6 +29,7 @@
 # Author: Geoffrey Mainland <mainland@eecs.harvard.edu>
 # Tinyos-2: Stephen Dawson-Haggerty
 
+import logging
 import os
 import re
 import struct
@@ -47,7 +48,7 @@ try:
 except:
     tinyos3.packet.SerialSource = None
 
-DEBUG = False
+logger = logging.getLogger(__name__)
 
 
 class MoteIFException(Exception):
@@ -59,6 +60,11 @@ class MoteIF:
     def __init__(self):
         self.listeners = {}
         self.watcher = Watcher.getInstance()
+
+    @staticmethod
+    def set_debug_level(level: int) -> None:
+        """Configure the logging level used by tinyos3."""
+        logging.basicConfig(level=level)
 
     def addListener(self, listener, msgClass):
         if listener not in self.listeners:

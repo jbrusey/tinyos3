@@ -72,6 +72,6 @@ class SFProtocol:
         if len(packet) > 255:
             raise SFProtocolException("packet too long")
 
-        self.outs.write(chr(len(packet)))
+        self.outs.write(bytes([len(packet)]))
         self.outs.write(packet)
         self.outs.flush()

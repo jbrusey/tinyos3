@@ -33,6 +33,7 @@
 #  - Add sequence number
 #  - Handle acknowledgements correctly
 
+import logging
 from threading import Lock, Condition, Thread
 from .IO import IODone
 from .Serial import Serial
@@ -48,7 +49,7 @@ P_PACKET_ACK = Serial.SERIAL_PROTO_PACKET_ACK
 P_PACKET_NO_ACK = Serial.SERIAL_PROTO_PACKET_NOACK
 P_UNKNOWN = Serial.SERIAL_PROTO_PACKET_UNKNOWN
 
-DEBUG = False
+logger = logging.getLogger(__name__)
 TX_ATTEMPT_LIMIT = 1
 
 
@@ -80,8 +81,7 @@ class RXThread(Thread):
                 if frameType == P_ACK:
                     with self.prot.ackCV:
                         if self.prot.lastAck:
-                            if DEBUG:
-                                print("Warning: last ack not cleared")
+                            logger.debug("Warning: last ack not cleared")
                         self.prot.lastAck = packet
                         self.prot.ackCV.notify()
                 else:
@@ -139,14 +139,12 @@ class SerialProtocol:
 
         while True:
             if not self.inSync:
-                if DEBUG:
-                    print("resynchronizing...", end=" ")
+                logger.debug("resynchronizing...",)
 
                 while self.ins.read(1) != B_SYNC_BYTE:
                     self.outs.write(B_SYNC_BYTE)
                     self.outs.write(B_SYNC_BYTE)
-                if DEBUG:
-                    print("synchronized")
+                logger.debug("synchronized")
 
                 self.inSync = True
                 count = 0
@@ -155,8 +153,7 @@ class SerialProtocol:
                 continue
 
             if count >= MTU:
-                if DEBUG:
-                    print("packet too long")
+                logger.debug("packet too long")
                 self.inSync = False
                 continue
 
@@ -165,8 +162,7 @@ class SerialProtocol:
             if escaped:
                 if b == SYNC_BYTE:
                     # sync byte following escape is an error, resync
-                    if DEBUG:
-                        print("unexpected sync byte")
+                    logger.debug("unexpected sync byte")
                     self.inSync = False
                     continue
 
@@ -185,16 +181,14 @@ class SerialProtocol:
                 readCrc = receiveBuffer[count - 2] | (receiveBuffer[count - 1] << 8)
                 computedCrc = crc(packet)
 
-                if DEBUG:
-                    print(" len: %d" % (len(receiveBuffer)))
-                    print(" rcrc: %x ccrc: %x" % (readCrc, computedCrc))
+                logger.debug(" len: %d", len(receiveBuffer))
+                logger.debug(" rcrc: %x ccrc: %x", readCrc, computedCrc)
 
                 if readCrc == computedCrc:
                     return packet
                 else:
-                    if DEBUG:
-                        print("bad packet")
-                        print(receiveBuffer)
+                    logger.debug("bad packet")
+                    logger.debug(receiveBuffer)
                     # We don't lose sync here. If we did, garbage on the line at
                     # startup will cause loss of the first packet.
                     count = 0
@@ -205,9 +199,8 @@ class SerialProtocol:
             count += 1
 
     def writePacket(self, data: bytes) -> None:
-        if DEBUG:
-            print("Writing packet:")
-            print(" ".join(map(hex, data)))
+        logger.debug("Writing packet:")
+        logger.debug(" ".join(map(hex, data)))
         attemptsLeft = TX_ATTEMPT_LIMIT
         self.seqNo = (self.seqNo + 1) % 256
         while attemptsLeft:
@@ -216,8 +209,7 @@ class SerialProtocol:
                 self.writeFramedPacket(P_PACKET_ACK, self.seqNo, data)
                 break
             except NoAckException:
-                if DEBUG:
-                    print("NO ACK:", self.seqNo)
+                logger.debug("NO ACK: %s", self.seqNo)
 
     def writeFramedPacket(self, frameType: int, sn: int, data: bytes) -> None:
         crc = 0
@@ -239,8 +231,7 @@ class SerialProtocol:
         frame += self.escape(crc >> 8)
 
         frame += B_SYNC_BYTE
-        if DEBUG:
-            print("Framed Write: (%x) " % sn + " ".join(map(hex, frame)))
+        logger.debug("Framed Write: (%x) %s", sn, " ".join(map(hex, frame)))
         self.outs.write(frame)
         with self.ackCV:
             self.ackCV.wait(0.25)

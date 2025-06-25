@@ -28,12 +28,13 @@
 #
 # Author: Geoffrey Mainland <mainland@eecs.harvard.edu>
 #
+import logging
 import re
 import socket
 import sys
 import traceback
 
-DEBUG = False
+logger = logging.getLogger(__name__)
 
 PLATFORMS = {
     "mica": ("avrmote", 1, 19200),
@@ -91,7 +92,5 @@ def factory_from_platform(platform):
         mod = __import__("tinyos3.packet.%s" % platform)
         return mod.packet.__dict__[platform].TOS_Msg
     except Exception as x:
-        if DEBUG:
-            print(x, file=sys.stderr)
-            print(traceback.print_tb(sys.exc_info()[2]), file=sys.stderr)
+        logger.debug(x, exc_info=True)
         raise UnknownPlatform()

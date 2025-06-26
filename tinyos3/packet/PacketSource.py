@@ -43,8 +43,6 @@ runner = ThreadTaskRunner()
 
 
 def finishAll():
-    global runner
-
     runner.cancelAll()
     runner.finish()
 
@@ -56,7 +54,6 @@ class PacketSourceException(Exception):
 
 class PacketSource(ThreadTask):
     def __init__(self, dispatcher):
-        global runner
         ThreadTask.__init__(self, runner)
         self.dispatcher = dispatcher
         self.semaphore = Semaphore(1)
@@ -89,7 +86,6 @@ class PacketSource(ThreadTask):
         self.finish()
 
     def start(self):
-        global runner
         runner.start(self)
 
     def open(self):

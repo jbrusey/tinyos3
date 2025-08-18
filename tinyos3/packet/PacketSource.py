@@ -31,6 +31,7 @@
 import logging
 import signal
 import sys
+import time
 import traceback
 
 from .IO import *
@@ -61,7 +62,16 @@ class PacketSource(ThreadTask):
 
     def __call__(self):
         try:
-            self.open()
+            while True:
+                try:
+                    self.open()
+                    break
+                except OSError as e:
+                    if self.isDone():
+                        self.finish()
+                        return
+                    logger.debug("open failed: %s", e)
+                    time.sleep(1)
         finally:
             self.semaphore.release()
 

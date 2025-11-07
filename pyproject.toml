@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tinyos3"
+version = "2.1.2.3"
+description = "Highly experimental TinyOS python tools (Unofficial Packaging)"
+readme = "README.md"
+requires-python = ">=3.7"
+license = {text = "See individual source files"}
+authors = [
+  {name = "TinyOS Contributors"},
+  {name = "Christen Ford", email = "c.t.ford@vikes.csuohio.edu"}
+]
+maintainers = [
+  {name = "Christen Ford", email = "c.t.ford@vikes.csuohio.edu"}
+]
+classifiers = [
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3.7",
+  "Topic :: Software Development :: Libraries :: Python Modules"
+]
+dependencies = [
+  "pyserial"
+]
+
+[project.urls]
+Homepage = "https://github.com/gollum18/tinyos3"
+
+[project.optional-dependencies]
+test = ["nose"]
+
+[tool.setuptools.packages.find]
+include = ["tinyos3*"]
+exclude = ["tests*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
+[tool.uv]
+dev-dependencies = [
+  "pytest"
+]

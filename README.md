@@ -1,6 +1,26 @@
 # tinyos3
 Highly experimental Python3 compatible TinyOS tools.
 
+## Getting started with uv
+
+This project now uses [uv](https://github.com/astral-sh/uv) for dependency
+management. After installing `uv`, create a virtual environment and install the
+runtime and development dependencies with:
+
+```
+uv sync
+```
+
+You can then run the test suite through uv:
+
+```
+uv run pytest
+```
+
+The runtime dependency footprint is intentionally small (just `pyserial`),
+while the `pytest` dependency is tracked as a development-only dependency via
+`tool.uv.dev-dependencies` in `pyproject.toml`.
+
 ## Description
 Currently, the only Python tools avaialable on PyPI for TinyOS are Python2
 compatible only. These tools are an attempt by myself to convert those tools

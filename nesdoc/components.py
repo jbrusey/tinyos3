@@ -46,14 +46,14 @@ def generate_speclist(ht, name, elems):
     ht.tag("p")
     ht.heading(name)
     for elem in elems:
-      ht.func_sig_start();
+      ht.func_sig_start()
       spec_signature_html(ht, elem)
       doc = nd_doc_short(elem)
       if doc != None:
         ht.push("menu")
         ht.pln(doc)
         ht.popln()
-      ht.func_sig_stop();
+      ht.func_sig_stop()
 
 def interface_compare(x, y):
   if cmp(x.getAttribute("qname").lower(), y.getAttribute("qname").lower()) == 0 :
@@ -69,9 +69,9 @@ def generate_component(comp):
     kind = "configuration"
   ht.title("Component: " + nicename)
   ht.body()
-  ht.push("h2");
+  ht.push("h2")
   ht.p("Component: " + nicename)
-  ht.popln();
+  ht.popln()
   
   # The source code name and documentation
   ht.push("b")

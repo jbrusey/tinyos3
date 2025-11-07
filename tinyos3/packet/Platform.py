@@ -29,10 +29,6 @@
 # Author: Geoffrey Mainland <mainland@eecs.harvard.edu>
 #
 import logging
-import re
-import socket
-import sys
-import traceback
 
 logger = logging.getLogger(__name__)
 

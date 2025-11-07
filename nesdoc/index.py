@@ -51,7 +51,7 @@ def generate_indices(compfiles, intffiles):
     tableforlist_start(ht)
     ht.push('div', 'id="heading"')
     ht.p(capitalize(kind))
-    ht.pop();
+    ht.pop()
     l.sort(lambda x, y: cmp(x[1].lower(), y[1].lower()))
     ht.push('span', 'id="funcnameshort"')
     for x in l:

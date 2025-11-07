@@ -31,9 +31,8 @@
 # @author Kamin Whitehouse
 #
 
-import sys, string, math, re, os
+import os
 from struct import *
-from xml.dom import minidom
 from copy import deepcopy
 
 ###########

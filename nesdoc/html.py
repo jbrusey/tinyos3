@@ -25,8 +25,8 @@ class Html:
     self.tags = []
     self.ind = 0
     self.at0 = True
-    self.pushln("html");
-    self.pushln("head");
+    self.pushln("html")
+    self.pushln("head")
     # include stylesheet
     self.tag("LINK", "rel=\"stylesheet\"", "href=\"nesdoc.css\"", "type=\"text/css\"", "media=\"screen\"")
 
@@ -77,7 +77,7 @@ class Html:
 
   # start a new tag on a new line
   def pushln(self, tag, *attrs):
-    self.startline();
+    self.startline()
     self.tag(tag, *attrs)
     self.pln("")
     self.tags.append(tag)
@@ -109,9 +109,9 @@ class Html:
 
   # print the HTML title
   def title(self, s):
-    self.push("title");
-    self.pq(s);
-    self.pop();
+    self.push("title")
+    self.pq(s)
+    self.pop()
 
   # start the body section
   def body(self):
@@ -143,9 +143,9 @@ class Html:
         if tag in _doctags:
           (tag, val) = _doctags[tag](val)
         if tag != lasttag:
-          self.tag("dt");
+          self.tag("dt")
           self.push("b"); self.pq(capitalize(tag) + ":"); self.pop()
-        self.pushln("dd");
+        self.pushln("dd")
         self.p(self.escape_email(val))
         self.popln() #dd
         lasttag = tag
@@ -155,13 +155,13 @@ class Html:
   def heading(self, s):
     self.push("div", "id=heading")
     self.pq(s)
-    self.pop();
+    self.pop()
 
   def func_sig_start(self) :
     self.push("div", "id=funcsig")
 
   def func_sig_stop(self) :
-    self.pop();
+    self.pop()
 
   # print a function signature. namedecorator is called with the function
   # name as argument so that you can decorate the actual function name

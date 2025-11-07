@@ -29,10 +29,7 @@
 # Author: Geoffrey Mainland <mainland@eecs.harvard.edu>
 #
 import logging
-import signal
-import sys
 import time
-import traceback
 
 from .IO import *
 from .ThreadTask import *

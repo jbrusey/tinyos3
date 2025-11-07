@@ -175,7 +175,7 @@ _type_printers = {
   "type-interface" : _typename_tag,
   "type-component" : _typename_tag,
   "type-var" : _typename_var
-  };
+  }
 
 # Return a (head, body) pair for type xmltype, declaring name (a string)
 # with type qualifiers quals (a string). isstar should be true if name

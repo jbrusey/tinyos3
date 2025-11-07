@@ -29,7 +29,6 @@
 # Author: Geoffrey Mainland <mainland@eecs.harvard.edu>
 #
 import re
-import socket
 import sys
 
 from .PacketSource import *

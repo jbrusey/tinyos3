@@ -29,7 +29,6 @@
 # Author: Geoffrey Mainland <mainland@eecs.harvard.edu>
 #
 import socket
-import sys
 
 from .IO import *
 

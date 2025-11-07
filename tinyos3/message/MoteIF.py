@@ -32,9 +32,6 @@
 import logging
 import os
 import re
-import struct
-import sys
-import traceback
 from tinyos3.utils.Watcher import Watcher
 
 from tinyos3.packet.Serial import Serial

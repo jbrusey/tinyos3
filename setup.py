@@ -3,14 +3,16 @@
 import os
 from setuptools import setup, find_packages
 
+
 def read(*paths):
     """Build a file path from *paths* and return the contents."""
     with open(os.path.join(*paths), "r") as fptr:
         return fptr.read()
 
+
 setup(
     name="tinyos3",
-    version="2.1.2.3",
+    version="2.1.2.4",
     author="TinyOS Contributors",
     author_email="UNKNOWN",
     maintainer="Christen Ford",

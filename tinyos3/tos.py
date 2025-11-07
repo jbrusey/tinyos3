@@ -39,12 +39,16 @@ packets using the serial format from T2 (TEP113) and a second one that
 tries to simplifies the work with arbitrary packets.
 """
 
-import sys, struct, time, socket, operator, os
+import sys
+import struct
+import time
+import socket
+import os
 import traceback
 
 try:
     import serial
-except ImportError as e:
+except ImportError:
     print("Please install PySerial first.")
     sys.exit(1)
 

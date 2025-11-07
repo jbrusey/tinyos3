@@ -1,6 +1,5 @@
 import os
 import os.path
-import platform
 
 # We search for devices like:
 # /sys/bus/usb/devices/2-1.2:1.0/ttyUSB0 (ftdi, cp2102)

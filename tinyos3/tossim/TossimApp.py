@@ -186,7 +186,7 @@ class NescTypes(object):
         # self.printSkippedTypes()
 
     def addType(self, value):
-        if not value.nescType in self._typeNames:
+        if value.nescType not in self._typeNames:
             self._typeNames.append(value.nescType)
         self._types[
             value.nescType
